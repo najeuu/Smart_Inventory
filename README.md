@@ -24,7 +24,7 @@ Fitur-fitur utama dalam proyek ini yaitu :
 - Pelaporan stok yang efisien
 - Integrasi dengan sistem manajemen berbasis web
 
-##Installation
+## Installation
 
 1. **Clone this repository**:
  ```bash
