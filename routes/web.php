@@ -3,18 +3,46 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-// Peminjaman Routes
-Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman');
-
-// Pengembalian Routes 
-    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
-    
 use App\Http\Controllers\RiwayatPeminjamanController;
 
-Route::get('/riwayat-peminjaman', [RiwayatPeminjamanController::class, 'index']);
-Route::get('/riwayat-peminjaman/{id}', [RiwayatPeminjamanController::class, 'show']);
+// login
+Route::get('/', function () {
+    return view('login');
+});
+
+//regis
+Route::get('regis', function () {
+    return view('regis');
+});
+
+
+//dasboard
+Route::get('/dasboard',function(){
+    return view(view: 'dasboard');
+});
+
+
+// Peminjaman
+Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman');
+
+
+// Pengembalian
+Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
+
+
+//riwayat
+Route::get('/riwayat', [RiwayatPeminjamanController::class, 'index']);
+Route::get('/riwayat/{id}', [RiwayatPeminjamanController::class, 'show']);
+
+
+//laporan
+Route::get('/laporan',function(){
+    return view('laporan');
+});
+
+
+//setting
+Route::get('/setting',function(){
+    return view('setting');
+});
+

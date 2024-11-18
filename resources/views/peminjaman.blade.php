@@ -3,6 +3,7 @@
 @section('title', 'Peminjaman')
 
 @section('content')
+
 <div class="flex flex-col">
 
         <form action="/peminjaman" method="POST">

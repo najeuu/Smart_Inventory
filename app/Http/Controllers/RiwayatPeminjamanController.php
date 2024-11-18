@@ -10,6 +10,6 @@ class RiwayatPeminjamanController extends Controller
     public function index()
     {
         $riwayat = RiwayatPeminjaman::all();
-        return view('RiwayatPeminjaman', compact('riwayat'));
+        return view('riwayat', compact('riwayat'));
     }
 }
