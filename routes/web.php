@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\RiwayatPeminjamanController;
@@ -13,9 +14,7 @@ Route::get('/', function () {
 
 
 //regis
-Route::get('regis', function () {
-    return view('regis');
-});
+Route::get('/register', [RegisterController::class, 'show'])->name('register');
 
 
 //dasboard

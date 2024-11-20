@@ -7,7 +7,8 @@
 <div class="w-screen flex items-center justify-center min-h-screen bg-gray-100 font-poppins ">
     <div>
         <div class="mb-[40px]">
-            <p class="font-bold text-[25pt] tracking-widest">HALO LABORAN</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
+            
             <p class="mt-[-5px] tracking-wide">Selamat Datang di MANAJEMEN BARANG LABORAN</p>
         </div>
 

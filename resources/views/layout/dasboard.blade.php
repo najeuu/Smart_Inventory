@@ -3,7 +3,7 @@
 </head>
 
 <body>
-    <div class="flex">
+    <div class="flex bg-gray-100">
         @include('partials.sidebar')
 
         @yield('content')
