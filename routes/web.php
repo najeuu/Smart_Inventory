@@ -5,10 +5,12 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\RiwayatPeminjamanController;
 
+
 // login
 Route::get('/', function () {
     return view('login');
 });
+
 
 //regis
 Route::get('regis', function () {
@@ -19,6 +21,12 @@ Route::get('regis', function () {
 //dasboard
 Route::get('/dasboard',function(){
     return view(view: 'dasboard');
+});
+
+
+// data barang
+Route::get('/data_barang',function(){
+    return view(view: 'data_barang');
 });
 
 

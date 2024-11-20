@@ -5,7 +5,7 @@
     @include('partials.head')
 </head>
 
-<body class="bg-orange-50">
+<body class="bg-gray-100">
     <div class="flex min-h-screen">
         <!-- Sidebar -->
         @include('partials.sidebar')
