@@ -6,8 +6,6 @@
     @include('partials.sidebar')
 
     <!-- Konten Utama -->
-    <main class="flex-1 p-8">
-        @yield('content')
-    </main>
+    @yield('content')
 </body>
 

@@ -45,6 +45,45 @@
                                     </div>
                                 </td>
                             </tr>
+                            <tr class="hover:bg-orange-100 transition duration-200">
+                                <td class="py-2 border-t border-gray-300 text-center">1</td>
+                                <td class="px-2 py-3 border-t text-left border-gray-300">Barang A</td>
+                                <td class="py-2 border-t border-gray-300 text-center">10</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">Gudang 1</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">128939</td>
+                                <td class="py-2 border-t border-gray-300">
+                                    <div class="flex items-center justify-center font-semibold h-1 text-center">
+                                        <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('Barang A', 10, 'Gudang 1', '128939')">EDIT</button>
+                                        <button class="bg-red-400 hover:bg-red-600 rounded-md p-1 w-[80px]">HAPUS</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-orange-100 transition duration-200">
+                                <td class="py-2 border-t border-gray-300 text-center">1</td>
+                                <td class="px-2 py-3 border-t text-left border-gray-300">Barang A</td>
+                                <td class="py-2 border-t border-gray-300 text-center">10</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">Gudang 1</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">128939</td>
+                                <td class="py-2 border-t border-gray-300">
+                                    <div class="flex items-center justify-center font-semibold h-1 text-center">
+                                        <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('Barang A', 10, 'Gudang 1', '128939')">EDIT</button>
+                                        <button class="bg-red-400 hover:bg-red-600 rounded-md p-1 w-[80px]">HAPUS</button>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-orange-100 transition duration-200">
+                                <td class="py-2 border-t border-gray-300 text-center">1</td>
+                                <td class="px-2 py-3 border-t text-left border-gray-300">Barang A</td>
+                                <td class="py-2 border-t border-gray-300 text-center">10</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">Gudang 1</td>
+                                <td class="px-2 py-3 border-t border-gray-300 text-center">128939</td>
+                                <td class="py-2 border-t border-gray-300">
+                                    <div class="flex items-center justify-center font-semibold h-1 text-center">
+                                        <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('Barang A', 10, 'Gudang 1', '128939')">EDIT</button>
+                                        <button class="bg-red-400 hover:bg-red-600 rounded-md p-1 w-[80px]">HAPUS</button>
+                                    </div>
+                                </td>
+                            </tr>
                         </tbody>
                     </table>
                 </div>

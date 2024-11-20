@@ -5,13 +5,13 @@
     @include('partials.head')
 </head>
 
-<body class="bg-gray-100 flex">
-    <div class="flex min-h-screen">
+<body class="bg-gray-100">
+    <div class="flex w-full">
         <!-- Sidebar -->
         @include('partials.sidebar')
 
         <!-- Konten Utama -->
-        <main class="p-4 items-center justify-center bg-red-400">
+        <main class=" w-full mx-8">
             @yield('content')
         </main>
     </div>

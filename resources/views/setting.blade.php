@@ -3,7 +3,7 @@
 @section('content')
 
     <!-- main conten -->
-    <div class="w-full py-8 flex items-center justify-center min-screen bg-gray-100 font-poppins rounded relative">
+    <div class="w-full py-7 flex items-center justify-center min-screen bg-gray-100 font-poppins rounded relative">
         <div class="w-[400px] h-[530px] bg-orange-300 rounded-xl custom-shadow flex justify-center items-center">
             <div class="flex flex-col items-center w-[300]">
                 <div class="bg-white w-full h-[300px] mb-8 p-4 rounded-3xl bg-opacity-80 shadow-md ">

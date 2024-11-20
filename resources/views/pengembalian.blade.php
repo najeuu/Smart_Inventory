@@ -3,7 +3,7 @@
 @section('title', 'Pengembalian')
 
 @section('content')
-<div class="flex flex-col ml-8">
+<div class="flex flex-col ml-">
     <!-- Cari Data Mahasiswa -->
     <div class="mb-8 bg-orange-300 p-6 rounded-lg">
         <div class="max-w-xl">
@@ -56,6 +56,32 @@
                             <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
                             <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
                         </tr>
+                        <tr class="border-t border-grey-300">
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">1</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
+                        </tr>
+                        <tr class="border-t border-grey-300">
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">1</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
+                        </tr>
+                        <tr class="border-t border-grey-300">
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">1</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
+                        </tr>
+                        <tr class="border-t border-grey-300">
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">1</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
+                        </tr>
+                        <tr class="border-t border-grey-300">
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">1</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">Arduino</td>
+                            <td class="py-2 px-4 font-poppins border-t border-gray-300 text-center">10</td>
+                        </tr>
+                        
                     </tbody>
                 </table>
             </div>

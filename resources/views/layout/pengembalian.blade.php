@@ -6,10 +6,11 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex min-h-screen">
+    <div class="flex">
         <!-- Sidebar -->
-        @include('partials.sidebar')
-
+        <div class="min-h-screen h-full">
+            @include('partials.sidebar')
+        </div>
         <!-- Konten Utama -->
         <main class="flex-1 p-8">
             @yield('content')

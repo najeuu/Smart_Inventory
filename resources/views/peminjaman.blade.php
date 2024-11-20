@@ -4,10 +4,9 @@
 
 @section('content')
 
-<div class="flex flex-col ml-8">
-
+<div class="">
     <form action="/peminjaman" method="POST">
-        <div class="mb-8 bg-orange-300 p-6 rounded-lg">
+        <div class="mb-8 bg-orange-300 p-6 rounded-lg custom-shadow">
             <!-- Nama Mahasiswa -->
             <div class="mb-4">
                 <label for="nama_mahasiswa" class="block font-poppins text-lg font-bold mb-2">Nama Mahasiswa</label>
@@ -22,7 +21,7 @@
         </div>
 
         <!-- Pilih Barang -->
-        <div class="mb-8 bg-orange-300 p-6 rounded-lg">
+        <div class="mb-8 bg-orange-300 p-6 rounded-lg custom-shadow">
             <h2 class="font-bold mb-2 font-poppins text-lg">Pilih Barang</h2>
 
             <!-- Tabel -->

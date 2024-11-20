@@ -1,8 +1,8 @@
 <!--sidebar-->
-<div class="flex min-h-screen bg-gray-100 font-poppins mb-4">
-    <div class="bg-orange-300 w-64 p-6 hidden md:flex md:flex-col rounded-tr-3xl rounded-br-3xl mr-4 custom-shadow z-30">
-        <div class="flex items-center mb-8 space-x-2 mt-4">
-            <img src="{{ url('/image/logo.png') }}" alt="Logo" class="h-14 w-14 mr-2" /img>
+<div class="flex bg-gray-100 font-poppins h-screen">
+    <div class="bg-orange-300 w-64 hidden md:flex md:flex-col rounded-tr-3xl rounded-br-3xl custom-shadow z-30">
+        <div class="flex items-center mb-8 space-x-2 mt-4 justify-center">
+            <img src="{{ url('/image/logo.png') }}" alt="Logo" class="h-14 w-14 mr-2">
             <div class="text-left">
             <h2 class="text-lg font-bold text-black ">
                 <p class="font-bold text-[20px] tracking-wide">MANAJEMEN</p>
@@ -17,7 +17,7 @@
                 <span class="material-icons mr-4">dashboard</span>
                 Dashboard
             </a>
-            <a href="/databarang" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/data_barang" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">inventory</span>
                 Data Barang
             </a>
@@ -39,7 +39,7 @@
             </a>
         </nav>
 
-        <div class="w-full space-y-2 font-bold">
+        <div class="w-full space-y-2 font-bold mb-6">
             <a href="/setting" class="flex items-center px-4 py-1 text-black bg-white rounded-r-full mr-4">
                 <span class="material-icons mr-4">settings</span>
                 Setting

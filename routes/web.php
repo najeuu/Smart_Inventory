@@ -26,7 +26,7 @@ Route::get('/dasboard',function(){
 // data barang
 Route::get('/data_barang',function(){
     return view(view: 'data_barang');
-});
+})->name('data_barang');
 
 
 // Peminjaman
