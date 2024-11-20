@@ -1,5 +1,10 @@
 <head>
     @include('partials.head')
+    <style>
+        #dashboard{
+         background:white
+        }
+    </style>
 </head>
 
 <body>

@@ -1,8 +1,10 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
     @include('partials.head')
+    <style>
+        #pengembalian {
+         background:white
+        }
+    </style>
 </head>
 
 <body class="bg-gray-100">

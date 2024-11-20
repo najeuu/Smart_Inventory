@@ -13,34 +13,34 @@
         </div>
 
         <nav class="flex-1 w-full font-bold space-y-2">
-            <a href="/dasboard" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/dasboard" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">dashboard</span>
                 Dashboard
             </a>
-            <a href="/data_barang" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/data_barang" id="data_barang" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">inventory</span>
                 Data Barang
             </a>
-            <a href="/peminjaman" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/peminjaman" id="peminjaman" class="flex items-center px-4 py-1  text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">shopping_cart</span>
                 Peminjaman
             </a>
-            <a href="/pengembalian" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/pengembalian" id="pengembalian" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">undo</span>
                 Pengembalian
             </a>
-            <a href="riwayat" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/riwayat" id="riwayat" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">history</span>
                 Riwayat
             </a>
-            <a href="/laporan" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="/laporan" id="laporan" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">description</span>
                 Laporan
             </a>
         </nav>
 
         <div class="w-full space-y-2 font-bold mb-6">
-            <a href="/setting" class="flex items-center px-4 py-1 text-black bg-white rounded-r-full mr-4">
+            <a href="/setting" id="setting" class="flex items-center px-4 py-1 text-black  hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">settings</span>
                 Setting
             </a>

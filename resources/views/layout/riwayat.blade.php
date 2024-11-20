@@ -1,5 +1,10 @@
 <head>
     @include('partials.head')
+    <style>
+        #riwayat{
+         background:white
+        }
+    </style>
 </head>
 
 <body class="flex bg-gray-100">
