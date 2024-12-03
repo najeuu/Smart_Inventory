@@ -19,7 +19,7 @@
     <!-- Login -->
     <div class="relative z-10 bg-white bg-opacity-80 rounded-lg shadow-lg w-11/12 max-w-sm p-6">
         <h1 class="text-2xl font-bold text-center mb-6">Masuk Akun</h1>
-        <form action="/login" method="POST" class="space-y-4">
+        <form action="{{ route('login.post') }}" method="POST">
             @csrf
             <!-- Username -->
             <div>
@@ -43,12 +43,18 @@
                     </a>
                 </span>
             </div>
+            
 
             <!-- Tombol Login -->
             <button type="submit"
                 class="w-full px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-500 transition">
                 Masuk
             </button>
+            @if (session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+            @endif
         </form>
     </div>
 </body>

@@ -53,7 +53,7 @@
             <!-- Login -->
             <div class="text-sm text-center">
                 <span>Sudah Punya Akun?
-                    <a href="/" class="text-yellow-500 font-semibold hover:underline">
+                    <a href="{{ route('login') }}" class="text-yellow-500 font-semibold hover:underline">
                         Masuk
                     </a>
                 </span>

@@ -13,7 +13,7 @@
         </div>
 
         <nav class="flex-1 w-full font-bold space-y-2">
-            <a href="/dasboard" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="{{ route('dasboard') }}" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">dashboard</span>
                 Dashboard
             </a>
@@ -44,7 +44,7 @@
                 <span class="material-icons mr-4">settings</span>
                 Setting
             </a>
-            <a href="/logout" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+            <a href="{{ route('logout') }}" method="POST" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">logout</span>
                 Logout
             </a>

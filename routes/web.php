@@ -5,28 +5,38 @@ use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
 use App\Http\Controllers\RiwayatPeminjamanController;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\DasboardController;
+use App\Http\Controllers\DataBarangController;
+
+
+
 
 
 // login
 Route::get('/', function () {
-    return view('login');
-});
+    return view('auth.login');
+})->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
 
 
 //regis
-Route::get('/register', [RegisterController::class, 'show'])->name('register');
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 
 //dasboard
-Route::get('/dasboard',function(){
-    return view(view: 'dasboard');
-});
+Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
+
 
 
 // data barang
 Route::get('/data_barang',function(){
     return view(view: 'data_barang');
 })->name('data_barang');
+Route::get('/data_barang', [DataBarangController::class, 'show']);
 
 
 // Peminjaman
@@ -53,3 +63,5 @@ Route::get('/setting',function(){
     return view('setting');
 });
 
+// logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
