@@ -27,16 +27,16 @@ Route::get('/register', function () {
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 
-//dasboard
+//Dasboard
 Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
 
 
 
-// data barang
-Route::get('/data_barang',function(){
-    return view(view: 'data_barang');
-})->name('data_barang');
-Route::get('/data_barang', [DataBarangController::class, 'show']);
+//Data barang
+Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');
+Route::post('/data_barang', [DataBarangController::class, 'store'])->name('barang.store');
+Route::put('/data_barang/{id}', [DataBarangController::class, 'update'])->name('barang.update');
+Route::delete('/data_barang/{id}', [DataBarangController::class, 'destroy'])->name('barang.destroy');
 
 
 // Peminjaman

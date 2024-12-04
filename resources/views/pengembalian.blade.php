@@ -3,7 +3,7 @@
 @section('title', 'Pengembalian')
 
 @section('content')
-<div class="flex flex-col ml-">
+<div class="flex flex-col">
     <!-- Cari Data Mahasiswa -->
     <div class="mb-8 bg-orange-300 p-6 rounded-lg">
         <div class="max-w-xl">
