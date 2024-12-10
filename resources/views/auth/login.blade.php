@@ -5,9 +5,16 @@
     @include('partials.head')
     <style>
         body {
-            overflow: hidden; /* Mencegah scroll */
+            overflow: hidden;
         }
     </style>
+    <script>
+        function showPopup(message) {
+            if (message) {
+                alert(message);
+            }
+        }
+    </script>
 </head>
 
 <body class="flex items-center justify-center min-h-screen bg-yellow-400">
@@ -30,33 +37,34 @@
 
             <!-- Password -->
             <div>
-                <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
+                <label for="password" class="mt-2 block text-sm font-medium text-gray-700">Kata Sandi</label>
                 <input type="password" name="password" id="password" required
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
             </div>
 
             <!-- Registration -->
-            <div class="text-sm text-center">
+            <div class="text-sm text-center mt-2">
                 <span>Belum Mendaftar?
                     <a href="{{ route('register') }}" class="text-yellow-500 font-semibold hover:underline">
                         Daftar
                     </a>
                 </span>
             </div>
-            
 
             <!-- Tombol Login -->
             <button type="submit"
-                class="w-full px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-500 transition">
+                class="mt-2 w-full px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-500 transition">
                 Masuk
             </button>
-            @if (session('success'))
-            <div class="alert alert-success">
-                {{ session('success') }}
-            </div>
-            @endif
         </form>
     </div>
+
+    <!-- JavaScript untuk menampilkan pop-up -->
+    @if (session('success'))
+        <script>
+            showPopup("{{ session('success') }}");
+        </script>
+    @endif
 </body>
 
 </html>

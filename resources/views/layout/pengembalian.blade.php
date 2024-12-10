@@ -2,12 +2,12 @@
     @include('partials.head')
     <style>
         #pengembalian {
-         background:white
+            background: white
         }
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 overflow-hidden">
     <div class="flex">
         <!-- Sidebar -->
         <div class="min-h-screen h-full">
