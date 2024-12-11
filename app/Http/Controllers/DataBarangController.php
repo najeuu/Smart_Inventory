@@ -10,17 +10,7 @@ class DataBarangController extends Controller
     public function show()
     {
         $data = Barang::get();
-        $nama_barang = [];
-        $jumlah = [];
-        $lokasi = [];
-        $kode_rfid = [];
-        foreach ($data as $barang) {
-            $nama_barang[] = $barang->nama_barang;
-            $jumlah[] = $barang->jumlah;
-            $lokasi[] = $barang->lokasi;
-            $kode_rfid[] = $barang->kode_rfid;
-        }
-        return view('data_barang', compact('nama_barang', 'jumlah', 'lokasi', 'kode_rfid', 'data'));
+        return view('data_barang', compact('data'));
     }
 
     public function store(Request $request)
@@ -34,7 +24,7 @@ class DataBarangController extends Controller
 
         Barang::create($request->all());
 
-        return redirect()->route('data_barang')->with('success', 'Barang berhasil ditambahkan.');
+        return redirect()->route('data_barang');
     }
 
     public function update(Request $request, $id)
@@ -49,7 +39,7 @@ class DataBarangController extends Controller
         $barang = Barang::findOrFail($id);
         $barang->update($request->all());
 
-        return redirect()->route('data_barang')->with('success', 'Barang berhasil diupdate.');
+        return redirect()->route('data_barang');
     }
 
     public function destroy($id)
@@ -57,6 +47,6 @@ class DataBarangController extends Controller
         $barang = Barang::findOrFail($id);
         $barang->delete();
 
-        return redirect()->route('data_barang')->with('success', 'Barang berhasil dihapus.');
+        return redirect()->route('data_barang');
     }
 }

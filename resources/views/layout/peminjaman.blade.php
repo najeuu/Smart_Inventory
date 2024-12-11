@@ -13,7 +13,7 @@
         @include('partials.sidebar')
 
         <!-- Konten Utama -->
-        <main class=" w-full mx-8">
+        <main class="flex-1 p-8">
             @yield('content')
         </main>
     </div>

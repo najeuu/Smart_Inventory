@@ -10,15 +10,11 @@ use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\DataBarangController;
 
 
-
-
-
 // login
 Route::get('/', function () {
     return view('auth.login');
 })->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.post');
-
 
 //regis
 Route::get('/register', function () {
@@ -26,11 +22,8 @@ Route::get('/register', function () {
 })->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
-
 //Dasboard
 Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
-
-
 
 //Data barang
 Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');
@@ -38,25 +31,21 @@ Route::post('/data_barang', [DataBarangController::class, 'store'])->name('baran
 Route::put('/data_barang/{id}', [DataBarangController::class, 'update'])->name('barang.update');
 Route::delete('/data_barang/{id}', [DataBarangController::class, 'destroy'])->name('barang.destroy');
 
-
 // Peminjaman
-Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('peminjaman');
-
+Route::get('/peminjaman', [PeminjamanController::class, 'show'])->name('peminjaman');
+Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
 // Pengembalian
 Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
-
 
 //riwayat
 Route::get('/riwayat', [RiwayatPeminjamanController::class, 'index']);
 Route::get('/riwayat/{id}', [RiwayatPeminjamanController::class, 'show']);
 
-
 //laporan
 Route::get('/laporan',function(){
     return view('laporan');
 });
-
 
 //setting
 Route::get('/setting',function(){

@@ -4,75 +4,163 @@
 
 @section('content')
 
-<div class="flex flex-col">
-    <form action="/peminjaman" method="POST">
-        <div class="mb-8 bg-orange-300 p-6 rounded-lg custom-shadow mt-8">
-            <!-- Nama Mahasiswa -->
-            <div class="mb-4">
-                <label for="nama_mahasiswa" class="block font-poppins text-lg font-bold mb-2">Nama Mahasiswa</label>
-                <input type="text" id="nama_mahasiswa" name="nama_mahasiswa" class="w-full px-4 py-2 border rounded-lg" required>
-            </div>
+<div class="bg-gray-100 font-poppins leading-normal tracking-normal">
+    <!-- Pop-up Success -->
+    @if (session('success'))
+    <div id="success-popup" class="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="bg-orange-300 h-16 max-w-xs w-auto p-4 rounded-lg shadow-lg text-center">
+            <p class="font-bold text-white mt-2">{{ session('success') }}</p>
+        </div>
+    </div>
+    @endif
 
-            <!-- NIM -->
-            <div class="mb-4">
-                <label for="nim" class="block font-bold mb-2 font-poppins text-lg">NIM</label>
-                <input type="text" id="nim" name="nim" class="w-full px-4 py-2 border rounded-lg" required>
+    <!-- Pop-up Error (Jika stok barang tidak cukup) -->
+    @if (session('error'))
+    <div id="error-popup" class="fixed top-0 left-0 w-full h-full bg-red-700 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
+        <div class="bg-red-500 h-16 max-w-xs w-auto p-4 rounded-lg shadow-lg text-center">
+            <p class="font-bold text-white mt-2">{{ session('error') }}</p>
+        </div>
+    </div>
+    @endif
+
+    <!-- Konten -->
+    <div class="w-full p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
+        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Peminjaman</p>
+
+        <!-- Tombol Ajukan Peminjaman -->
+        <a href="javascript:void(0)" onclick="openForm()" class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
+            <span class="material-symbols-outlined text-[20px] mr-1">add</span>
+            <p class="text-[15px]">Ajukan Peminjaman</p>
+        </a>
+
+        <!-- Tabel Daftar Peminjaman -->
+        <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
+            <table class="table-auto w-full border-collapse">
+                <thead>
+                    <tr class="bg-orange-300 text-black">
+                        <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
+                        <th class="py-3 px-4 font-bold text-left">Nama Mahasiswa</th>
+                        <th class="py-3 px-4 font-bold text-center">NIM</th>
+                        <th class="py-3 px-4 font-bold text-center">Jenis Barang</th>
+                        <th class="py-3 px-4 font-bold text-center">Total Barang</th>
+                        <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Tanggal Pengajuan</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($data as $index => $peminjaman)
+                    <tr class="bg-white border-b hover:bg-gray-100">
+                        <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
+                        <td class="py-3 px-4 text-left">{{ $peminjaman->nama_mahasiswa }}</td>
+                        <td class="py-3 px-4 text-center">{{ $peminjaman->nim }}</td>
+                        <td class="py-3 px-4 text-center">{{ $peminjaman->jenis_barang }}</td>
+                        <td class="py-3 px-4 text-center">{{ $peminjaman->total_barang }}</td>
+                        <td class="py-3 px-4 text-center">{{ $peminjaman->tanggal_pengajuan }}</td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Form Peminjaman -->
+        <div id="ajukan-peminjaman" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
+            <div class="bg-white w-1/2 p-5 rounded-lg shadow-lg transform -translate-y-full transition-transform duration-500">
+                <h2 class="text-xl font-bold mb-4">Form Pengajuan Peminjaman</h2>
+                <form action="{{ route('peminjaman.store') }}" method="POST">
+                    @csrf
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Nama Mahasiswa</label>
+                        <input type="text" name="nama_mahasiswa" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan nama mahasiswa" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">NIM</label>
+                        <input type="text" name="nim" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan nim" required />
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 font-medium mb-2">Jenis Barang</label>
+                        <select name="jenis_barang" class="w-full px-3 py-2 border rounded-lg block text-gray-700" required>
+                            <option value="" disabled selected>Pilih Jenis Barang</option>
+                            @foreach ($dataBarang as $barang)
+                            <option value="{{ $barang->nama_barang }}">{{ $barang->nama_barang }} (Tersedia: {{ $barang->jumlah }})</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="flex gap-4 mb-4">
+                        <div class="flex-1">
+                            <label class="block text-gray-700 font-medium mb-2">Total Barang</label>
+                            <input type="number" name="total_barang" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan total barang" required />
+                        </div>
+                        <div class="flex-1">
+                            <label class="block text-gray-700 font-medium mb-2">Tanggal Pengajuan</label>
+                            <input type="date" name="tanggal_pengajuan" class="w-full px-3 py-2 border rounded-lg block text-gray-700" placeholder="Masukkan tanggal pengajuan" required />
+                        </div>
+                    </div>
+                    <div class="flex justify-end">
+                        <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeForm()">Batal</button>
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Simpan</button>
+                    </div>
+                </form>
             </div>
         </div>
 
-        <!-- Pilih Barang -->
-        <div class="mb-8 bg-orange-300 p-6 rounded-lg custom-shadow">
-            <h2 class="font-bold mb-2 font-poppins text-lg">Pilih Barang</h2>
+        <!-- JavaScript -->
+        <script>
+            const ajukanPeminjaman = document.getElementById('ajukan-peminjaman');
+            const formContent = ajukanPeminjaman.querySelector('div');
+            const successPopup = document.getElementById('success-popup');
+            const errorPopup = document.getElementById('error-popup');
 
-            <!-- Tabel -->
-            <div class="overflow-hidden rounded-lg mb-4">
-                <table class="table-auto w-full border-collapse">
-                    <thead>
-                        <tr class="bg-white text-black">
-                            <th class="py-3 font-bold text-center rounded-tl-lg font-poppins">No</th>
-                            <th class="px-2 py-3 font-bold text-center font-poppins">Nama Barang</th>
-                            <th class="py-3 font-bold text-center font-poppins">Stok Tersedia</th>
-                            <th class="py-3 font-bold text-center font-poppins">Pinjam</th>
-                            <th class="px-2 py-3 font-bold text-center rounded-tr-lg font-poppins">Jumlah</th>
-                        </tr>
-                    </thead>
+            if (successPopup) {
+                successPopup.classList.remove('pointer-events-none', 'opacity-0');
+                successPopup.classList.add('opacity-100');
 
-                    <!-- Data Barang-->
-                    <tbody class="bg-orange-50">
-                        <tr class="hover:bg-orange-100 transition duration-200 font-poppins">
-                            <td class="py-3 border-t border-gray-300 text-center font-poppins">1</td>
-                            <td class="px-2 py-3 border-t text-center border-gray-300 font-poppins">Laptop</td>
-                            <td class="py-3 border-t border-gray-300 text-center font-poppins">10</td>
-                            <td class="py-2 px-4 border-t text-center border-gray-300 font-poppins">
-                                <input type="checkbox" name="barang[]" value="1" class="form-checkbox">
-                            </td>
-                            <td class="py-2 px-4 border-t border-gray-300 font-poppins">
-                                <input type="number" name="jumlah[1]" value="1" min="1" max="10" class="w-full text-center px-2 py-1 border rounded-lg">
-                            </td>
-                        </tr>
+                setTimeout(() => {
+                    closeSuccessPopup();
+                }, 1000);
+            }
 
-                        <tr class="hover:bg-orange-100 transition duration-200">
-                            <td class="py-3 border-t border-gray-300 text-center font-poppins">2</td>
-                            <td class="px-2 py-3 border-t text-center border-gray-300 font-poppins">Arduino</td>
-                            <td class="py-3 border-t border-gray-300 text-center font-poppins">10</td>
-                            <td class="py-2 px-4 border-t text-center border-gray-300 font-poppins">
-                                <input type="checkbox" name="barang[]" value="1" class="form-checkbox">
-                            </td>
-                            <td class="py-2 px-4 border-t border-gray-300 font-poppins">
-                                <input type="number" name="jumlah[1]" value="1" min="1" max="10" class="w-full px-2 py-1 border rounded-lg">
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+            if (errorPopup) {
+                errorPopup.classList.remove('pointer-events-none', 'opacity-0');
+                errorPopup.classList.add('opacity-100');
 
-            <!-- Tombol Proses -->
-            <div class="text-left">
-                <button type="submit" class="px-6 py-2 bg-green-500 font-poppins text-white rounded-lg font-bold hover:bg-green-700 cursor-pointer">
-                    Proses
-                </button>
-            </div>
+                setTimeout(() => {
+                    closeErrorPopup();
+                }, 1000);
+            }
 
-    </form>
-</div>
-@endsection
+            function closeSuccessPopup() {
+                successPopup.classList.remove('opacity-100');
+                successPopup.classList.add('opacity-0');
+                setTimeout(() => {
+                    successPopup.classList.add('pointer-events-none');
+                }, 500);
+            }
+
+            function closeErrorPopup() {
+                errorPopup.classList.remove('opacity-100');
+                errorPopup.classList.add('opacity-0');
+                setTimeout(() => {
+                    errorPopup.classList.add('pointer-events-none');
+                }, 500);
+            }
+
+            function openForm() {
+                ajukanPeminjaman.classList.remove('pointer-events-none', 'opacity-0');
+                ajukanPeminjaman.classList.add('opacity-100');
+                formContent.classList.remove('-translate-y-full');
+                formContent.classList.add('translate-y-0');
+            }
+
+            function closeForm() {
+                formContent.classList.remove('translate-y-0');
+                formContent.classList.add('-translate-y-full');
+                ajukanPeminjaman.classList.remove('opacity-100');
+                ajukanPeminjaman.classList.add('opacity-0');
+                setTimeout(() => {
+                    ajukanPeminjaman.classList.add('pointer-events-none');
+                }, 500);
+            }
+        </script>
+    </div>
+
+    @endsection

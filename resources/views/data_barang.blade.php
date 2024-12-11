@@ -3,56 +3,53 @@
 @section('title', 'Data Barang')
 
 @section('content')
-<div class="w-screen flex bg-gray-100 flex-box overflow-visible">
-    <!-- main content -->
-    <div class="w-full flex flex-col mx-10 bg-gray-100 font-poppins pb-[30px]">
-        <div class="pb-[30px] pt-[30px]">
-            <p class="font-bold text-[25pt] tracking-widest">HALO LABORAN</p>
-            <p class="mt-[-5px] tracking-wide">Selamat Datang di Halaman Data Barang</p>
-        </div>
+<div class="bg-gray-100 font-poppins leading-normal tracking-normal">
+    <!-- Main content -->
+    <div class="w-full p-8">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
+        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Data Barang</p>
 
-        <div class="bg-gray-200 bg-opacity-90 p-3 rounded-lg shadow-lg">
-            <!-- Tombol -->
-            <a href="javascript:void(0)" onclick="openForm()" class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[35px] px-2 w-[135px] font-bold rounded-full mb-4 shadow-md transition duration-300">
-                <span class="material-symbols-outlined">add</span>
-                <p class="text-[12px]">Tambah Data</p>
-            </a>
-            <!-- Tabel -->
-            <div class="overflow-hidden rounded-lg">
-                <table class="table-auto w-full border-collapse">
-                    <thead>
-                        <tr class="bg-orange-300 text-white">
-                            <th class="py-2 font-bold text-center rounded-tl-lg">No</th>
-                            <th class="px-2 py-3 font-bold text-left">Nama Barang</th>
-                            <th class="py-2 font-bold text-center">Jumlah</th>
-                            <th class="px-2 py-3 font-bold text-center">Lokasi</th>
-                            <th class="px-2 py-3 font-bold text-center">Kode RFID</th>
-                            <th class="py-2 font-bold text-center rounded-tr-lg">Aksi</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-orange-50">
-                        @foreach($data as $index => $barang)
-                        <tr class="hover:bg-orange-100 transition duration-200">
-                            <td class="py-2 border-t border-gray-300 text-center">{{ $index + 1 }}</td>
-                            <td class="px-2 py-3 border-t text-left border-gray-300">{{ $barang->nama_barang }}</td>
-                            <td class="py-2 border-t border-gray-300 text-center">{{ $barang->jumlah }}</td>
-                            <td class="px-2 py-3 border-t border-gray-300 text-center">{{ $barang->lokasi }}</td>
-                            <td class="px-2 py-3 border-t border-gray-300 text-center">{{ $barang->kode_rfid }}</td>
-                            <td class="py-2 border-t border-gray-300">
-                                <div class="flex items-center justify-center font-semibold h-1 text-center">
-                                    <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('{{ $barang->nama_barang }}', '{{ $barang->jumlah }}', '{{ $barang->lokasi }}', '{{ $barang->kode_rfid }}', '{{ $barang->id }}')">EDIT</button>
-                                    <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline;">
-                                        @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="bg-red-400 hover:bg-red-600 rounded-md mt-4 p-1 w-[80px]">HAPUS</button>
-                                    </form>
-                                </div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-            </div>
+        <!-- Tombol Tambah Data Barang -->
+        <a href="javascript:void(0)" onclick="openForm()" class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
+            <span class="material-symbols-outlined text-[20px] mr-1">add</span>
+            <p class="text-[15px]">Tambah Data Barang</p>
+        </a>
+
+        <!-- Tabel Daftar Barang -->
+        <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
+            <table class="table-auto w-full border-collapse">
+                <thead>
+                    <tr class="bg-orange-300 text-black">
+                        <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
+                        <th class="py-3 px-4 font-bold text-left">Nama Barang</th>
+                        <th class="py-3 px-4 font-bold text-center">Jumlah</th>
+                        <th class="py-3 px-4 font-bold text-center">Lokasi</th>
+                        <th class="py-3 px-4 font-bold text-center">Kode RFID</th>
+                        <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($data as $index => $barang)
+                    <tr class="bg-white border-b hover:bg-gray-100">
+                        <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
+                        <td class="py-3 px-4 text-left">{{ $barang->nama_barang }}</td>
+                        <td class="py-3 px-4 text-center">{{ $barang->jumlah }}</td>
+                        <td class="py-3 px-4 text-center">{{ $barang->lokasi }}</td>
+                        <td class="py-3 px-4 text-center">{{ $barang->kode_rfid }}</td>
+                        <td class="py-2 border-t border-gray-300">
+                            <div class="flex items-center justify-center font-semibold h-1 text-center">
+                                <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('{{ $barang->nama_barang }}', '{{ $barang->jumlah }}', '{{ $barang->lokasi }}', '{{ $barang->kode_rfid }}', '{{ $barang->id }}')">EDIT</button>
+                                <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline;">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-400 hover:bg-red-600 rounded-md mt-4 p-1 w-[80px]">HAPUS</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -144,13 +141,11 @@
     const editFormContent = editBarang.querySelector('div');
 
     function openEditForm(nama, jumlah, lokasi, kodeRFID, id) {
-        // Isi form dengan data yang akan diedit
         document.getElementById('editNamaBarang').value = nama;
         document.getElementById('editJumlah').value = jumlah;
         document.getElementById('editLokasi').value = lokasi;
         document.getElementById('editKodeRFID').value = kodeRFID;
 
-        // Set action untuk form edit
         const editForm = document.getElementById('editForm');
         editForm.action = `/data_barang/${id}`;
 
