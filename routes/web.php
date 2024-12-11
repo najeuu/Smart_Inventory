@@ -22,8 +22,12 @@ Route::get('/register', function () {
 })->name('register');
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
+//logout
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
 //Dasboard
 Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
+
 
 //Data barang
 Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');

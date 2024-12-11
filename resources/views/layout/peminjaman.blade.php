@@ -2,12 +2,12 @@
     @include('partials.head')
     <style>
         #peminjaman {
-         background:white
+            background: white
         }
     </style>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 overflow-hidden">
     <div class="flex w-full">
         <!-- Sidebar -->
         @include('partials.sidebar')
