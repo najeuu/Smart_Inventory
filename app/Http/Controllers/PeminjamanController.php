@@ -4,21 +4,22 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Peminjaman;
-use App\Models\Barang;  // Import model Barang
+use App\Models\Barang;
 
 class PeminjamanController extends Controller
 {
     public function show()
     {
-        $data = Peminjaman::all(); // Ambil data peminjaman
-        $dataBarang = Barang::all(); // Ambil data barang
-        return view('peminjaman', compact('data', 'dataBarang')); // Kirim data peminjaman dan barang ke view
+        $data = Peminjaman::all();
+        $dataBarang = Barang::all();
+        return view('peminjaman', compact('data', 'dataBarang'));
     }
+
     public function search(Request $request)
     {
         $nim = $request->input('nim');
 
-        // mengambil data peminjam dan barang yang dipinjam berdasarkan NIM
+        // mengambil data peminjam dan barang yang dipinjam berdasarkan nim
         $peminjam = Peminjaman::where('nim', $nim)->first();
         if (!$peminjam) {
             return response()->json(['error' => 'Data tidak ditemukan'], 404);
@@ -32,6 +33,7 @@ class PeminjamanController extends Controller
             'barang' => $barang
         ]);
     }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -39,24 +41,22 @@ class PeminjamanController extends Controller
             'nim' => 'required|string|max:255',
             'jenis_barang' => 'required|string|max:255',
             'total_barang' => 'required|integer',
-            'tanggal_pengajuan' => 'required|date',
+            'tanggal_peminjaman' => 'required|date', // Ganti 'tanggal_pengajuan' menjadi 'tanggal_peminjaman'
         ]);
 
-        // Cari barang berdasarkan jenis_barang
+        // mencari barang
         $barang = Barang::where('nama_barang', $request->jenis_barang)->first();
 
-        // Cek apakah barang tersedia
         if ($barang && $barang->jumlah >= $request->total_barang) {
-            // Simpan peminjaman
+            // menyipan peminjaman
             Peminjaman::create($request->all());
 
-            // Kurangi jumlah barang
+            // mengurangi jumlah barang
             $barang->reduceQuantity($request->total_barang);
 
             return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil.');
         }
 
-        // Jika stok barang tidak cukup
         return redirect()->route('peminjaman')->with('error', 'Stok barang tidak cukup.');
     }
 }

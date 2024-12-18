@@ -16,17 +16,22 @@ class Peminjaman extends Model
         'nim', 
         'jenis_barang', 
         'total_barang', 
-        'tanggal_pengajuan'
+        'tanggal_peminjaman' 
     ];
 
-    // Relasi dengan Barang
+    // relasi dengan Barang
     public function barang()
     {
         return $this->belongsTo(Barang::class, 'jenis_barang', 'nama_barang');
     }
     public function barangPinjam()
     {
-        return $this->hasMany(Barang::class, 'peminjaman_id');  // Relasi dengan model Barang
+        return $this->hasMany(Barang::class, 'peminjaman_id');  
     }
 
+    // relasi dengan Pengembalian
+    public function pengembalian()
+    {
+        return $this->hasOne(Pengembalian::class, 'peminjaman_id');
+    }
 }

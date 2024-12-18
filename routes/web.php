@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\PengembalianController;
-use App\Http\Controllers\RiwayatPeminjamanController;
+use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\DataBarangController;
@@ -40,11 +40,13 @@ Route::get('/peminjaman', [PeminjamanController::class, 'show'])->name('peminjam
 Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
 
 // Pengembalian
-Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian');
+Route::get('/pengembalian', [PengembalianController::class, 'cari']);
+Route::get('/pengembalian/cari', [PengembalianController::class, 'cari'])->name('pengembalian.cari');
+Route::post('/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
 
 //riwayat
-Route::get('/riwayat', [RiwayatPeminjamanController::class, 'index']);
-Route::get('/riwayat/{id}', [RiwayatPeminjamanController::class, 'show']);
+Route::get('/riwayat', [RiwayatController::class, 'index']);
+Route::get('/riwayat/{id}', [RiwayatController::class, 'show']);
 
 //laporan
 Route::get('/laporan',function(){

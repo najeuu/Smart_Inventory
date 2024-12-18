@@ -14,7 +14,7 @@
     </div>
     @endif
 
-    <!-- Pop-up Error (Jika stok barang tidak cukup) -->
+    <!-- Pop-up Error (jika stok barang tidak cukup) -->
     @if (session('error'))
     <div id="error-popup" class="fixed top-0 left-0 w-full h-full bg-red-700 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
         <div class="bg-red-500 h-16 max-w-xs w-auto p-4 rounded-lg shadow-lg text-center">
@@ -23,12 +23,11 @@
     </div>
     @endif
 
-    <!-- Konten -->
     <div class="w-full p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
         <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Peminjaman</p>
 
-        <!-- Tombol Ajukan Peminjaman -->
+        <!-- Button Ajukan Peminjaman -->
         <a href="javascript:void(0)" onclick="openForm()" class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
             <span class="material-symbols-outlined text-[20px] mr-1">add</span>
             <p class="text-[15px]">Ajukan Peminjaman</p>
@@ -44,7 +43,7 @@
                         <th class="py-3 px-4 font-bold text-center">NIM</th>
                         <th class="py-3 px-4 font-bold text-center">Jenis Barang</th>
                         <th class="py-3 px-4 font-bold text-center">Total Barang</th>
-                        <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Tanggal Pengajuan</th>
+                        <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Tanggal Peminjaman</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -55,7 +54,7 @@
                         <td class="py-3 px-4 text-center">{{ $peminjaman->nim }}</td>
                         <td class="py-3 px-4 text-center">{{ $peminjaman->jenis_barang }}</td>
                         <td class="py-3 px-4 text-center">{{ $peminjaman->total_barang }}</td>
-                        <td class="py-3 px-4 text-center">{{ $peminjaman->tanggal_pengajuan }}</td>
+                        <td class="py-3 px-4 text-center">{{ $peminjaman->tanggal_peminjaman }}</td>
                     </tr>
                     @endforeach
                 </tbody>
@@ -65,7 +64,7 @@
         <!-- Form Peminjaman -->
         <div id="ajukan-peminjaman" class="fixed top-0 left-0 w-full h-full bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
             <div class="bg-white w-1/2 p-5 rounded-lg shadow-lg transform -translate-y-full transition-transform duration-500">
-                <h2 class="text-xl font-bold mb-4">Form Pengajuan Peminjaman</h2>
+                <h2 class="text-xl font-bold mb-4">Form Peminjaman</h2>
                 <form action="{{ route('peminjaman.store') }}" method="POST">
                     @csrf
                     <div class="mb-4">
@@ -91,8 +90,8 @@
                             <input type="number" name="total_barang" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan total barang" required />
                         </div>
                         <div class="flex-1">
-                            <label class="block text-gray-700 font-medium mb-2">Tanggal Pengajuan</label>
-                            <input type="date" name="tanggal_pengajuan" class="w-full px-3 py-2 border rounded-lg block text-gray-700" placeholder="Masukkan tanggal pengajuan" required />
+                            <label class="block text-gray-700 font-medium mb-2">Tanggal Peminjaman</label>
+                            <input type="date" name="tanggal_peminjaman" class="w-full px-3 py-2 border rounded-lg block text-gray-700" placeholder="Masukkan tanggal peminjaman" required />
                         </div>
                     </div>
                     <div class="flex justify-end">
@@ -163,4 +162,4 @@
         </script>
     </div>
 
-    @endsection
+@endsection
