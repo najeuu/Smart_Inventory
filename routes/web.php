@@ -49,9 +49,10 @@ Route::get('/riwayat', [RiwayatController::class, 'index']);
 Route::get('/riwayat/{id}', [RiwayatController::class, 'show']);
 
 //laporan
-Route::get('/laporan',function(){
-    return view('laporan');
-});
+Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');
+
+// Route untuk mengunduh laporan PDF
+Route::get('/laporan/download', [DataBarangController::class, 'downloadPDF'])->name('laporan.download');
 
 //setting
 Route::get('/setting',function(){

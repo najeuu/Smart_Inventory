@@ -4,9 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barang;
+use PDF;
 
 class DataBarangController extends Controller
 {
+    public function index()
+    {
+        // Mengambil semua data barang dari model Barang
+        $data = Barang::paginate(10);
+
+        // Mengirim data ke view 'laporan'
+        return view('laporan', compact('data')); 
+    }
+
+    public function downloadPDF()
+    {
+        \Log::info('Download PDF method called');
+        $data = Barang::all();
+        $pdf = PDF::loadView('pdf.laporan_barang', compact('data'));
+        return $pdf->download('laporan_barang.pdf');
+    }
+
     public function show()
     {
         $data = Barang::get();
