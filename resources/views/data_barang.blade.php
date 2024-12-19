@@ -14,7 +14,17 @@
             <span class="material-symbols-outlined text-[20px] mr-1">add</span>
             <p class="text-[15px]">Tambah Data Barang</p>
         </a>
+        @if (session('success'))
+    <div class="bg-green-500 text-white p-4 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
 
+@if (session('error'))
+    <div class="bg-red-500 text-white p-4 rounded mb-4">
+        {{ session('error') }}
+    </div>
+@endif
         <!-- Tabel Daftar Barang -->
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
             <table class="table-auto w-full border-collapse">
@@ -66,7 +76,7 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Jumlah</label>
-                <input type="number" name="jumlah" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan jumlah" required />
+                <input type="number" name="jumlah" min="0" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan jumlah" required />
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Lokasi</label>
