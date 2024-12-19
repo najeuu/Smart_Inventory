@@ -19,20 +19,26 @@
     <!-- Form Register -->
     <div class="relative z-10 bg-white bg-opacity-80 rounded-lg shadow-lg w-11/12 max-w-sm p-6">
         <h1 class="text-2xl font-bold text-center mb-6">Daftar Akun</h1>
-        <form action="/register" method="POST" class="space-y-4">
+        <form action="/register" method="POST" class="space-y-4" onsubmit="return validateForm();">
             @csrf
             <!-- Username -->
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                <input type="text" name="username" id="username" required
+                <input type="text" name="username" id="username" required value="{{ old('username') }}"
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+                @error('username')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Email -->
             <div>
                 <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" name="email" id="email" required
+                <input type="email" name="email" id="email" required value="{{ old('email') }}"
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+                @error('email')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Password -->
@@ -40,6 +46,9 @@
                 <label for="password" class="block text-sm font-medium text-gray-700">Kata Sandi</label>
                 <input type="password" name="password" id="password" required
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+                @error('password')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Confirm Password -->
@@ -66,6 +75,22 @@
             </button>
         </form>
     </div>
+
+    <!-- Script Validasi -->
+    <script>
+        function validateForm() {
+            // Ambil input password dan konfirmasi password
+            const password = document.getElementById('password').value;
+            const passwordConfirmation = document.getElementById('password_confirmation').value;
+
+            // Cek jika konfirmasi kata sandi tidak sama dengan kata sandi
+            if (password !== passwordConfirmation) {
+                alert("Konfirmasi kata sandi tidak sesuai dengan kata sandi.");
+                return false; // Mencegah form terkirim
+            }
+            return true; // Melanjutkan submit jika validasi berhasil
+        }
+    </script>
 </body>
 
 </html>

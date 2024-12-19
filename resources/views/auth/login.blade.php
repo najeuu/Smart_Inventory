@@ -28,11 +28,22 @@
         <h1 class="text-2xl font-bold text-center mb-6">Masuk Akun</h1>
         <form action="{{ route('login.post') }}" method="POST">
             @csrf
+
+            <!-- Notifikasi Error -->
+            @if (session('error'))
+                <script>
+                    alert("{{ session('error') }}");
+                </script>
+            @endif
+
             <!-- Username -->
             <div>
                 <label for="username" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                <input type="text" name="username" id="username" required
+                <input type="text" name="username" id="username" required value="{{ old('username') }}"
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+                @error('username')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Password -->
@@ -40,6 +51,9 @@
                 <label for="password" class="mt-2 block text-sm font-medium text-gray-700">Kata Sandi</label>
                 <input type="password" name="password" id="password" required
                     class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+                @error('password')
+                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Registration -->

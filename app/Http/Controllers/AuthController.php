@@ -25,7 +25,7 @@ class AuthController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan masuk.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan masuk');
     }
     public function login(Request $request)
     {
@@ -34,12 +34,16 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        if (auth()->attempt(['username' => $request->username, 'password' => $request->password])) {
-            return redirect('dasboard')->with('success', 'Welcome back!');
-        } else {
-            return back()->withErrors(['username' => 'Invalid credentials.'])->withInput();
+        $user = User::where('username', $request->username)->first();
+
+        if (!$user || !Hash::check($request->password, $user->password)) {
+            return redirect()->back()->with('error', 'Nama pengguna atau kata sandi salah')->withInput();
         }
+
+        Auth::login($user);
+        return redirect()->route('dasboard');
     }
+
     public function logout(Request $request)
     {
         auth()->logout();
