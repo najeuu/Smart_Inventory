@@ -8,6 +8,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\DataBarangController;
+use App\Http\Controllers\SettingController;
 
 
 // login
@@ -55,9 +56,8 @@ Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');
 Route::get('/laporan/download', [DataBarangController::class, 'downloadPDF'])->name('laporan.download');
 
 //setting
-Route::get('/setting',function(){
-    return view('setting');
-});
+Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
+Route::post('/setting/update', [SettingController::class, 'update'])->name('setting.update');
 
 // logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');
