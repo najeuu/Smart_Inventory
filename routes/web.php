@@ -8,6 +8,7 @@ use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\DataBarangController;
+use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\SettingController;
 
 
@@ -48,6 +49,12 @@ Route::post('/pengembalian/store', [PengembalianController::class, 'store'])->na
 //riwayat
 Route::get('/riwayat', [RiwayatController::class, 'index']);
 Route::get('/riwayat/{id}', [RiwayatController::class, 'show']);
+
+//lokasi
+Route::get('/lokasi', [LokasiController::class, 'show'])->name('lokasi');
+Route::post('/lokasi', [LokasiController::class, 'store'])->name('lokasi.store');
+Route::put('/lokasi/{id}', [LokasiController::class, 'update'])->name('lokasi.update');
+Route::delete('/lokasi/{id}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
 
 //laporan
 Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');

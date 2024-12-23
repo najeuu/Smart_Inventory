@@ -15,9 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('nama_barang');
             $table->integer('jumlah');
-            $table->string('lokasi');
-            $table->string('kode_rfid')->unique(); // Kolom untuk kode tag RFID
+            $table->unsignedBigInteger('lokasi_id');
+            $table->string('kode_rfid')->unique(); 
             $table->timestamps();
+
+            $table->foreign('lokasi_id')->references('id')->on('lokasi')->onDelete('cascade');
         });
     }
 

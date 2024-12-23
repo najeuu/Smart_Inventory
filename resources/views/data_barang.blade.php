@@ -44,11 +44,11 @@
                         <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
                         <td class="py-3 px-4 text-left">{{ $barang->nama_barang }}</td>
                         <td class="py-3 px-4 text-center">{{ $barang->jumlah }}</td>
-                        <td class="py-3 px-4 text-center">{{ $barang->lokasi }}</td>
+                        <td class="py-3 px-4 text-center">{{ $barang->lokasi->lokasi}}</td>
                         <td class="py-3 px-4 text-center">{{ $barang->kode_rfid }}</td>
                         <td class="py-2 border-t border-gray-300">
                             <div class="flex items-center justify-center font-semibold h-1 text-center">
-                                <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('{{ $barang->nama_barang }}', '{{ $barang->jumlah }}', '{{ $barang->lokasi }}', '{{ $barang->kode_rfid }}', '{{ $barang->id }}')">EDIT</button>
+                                <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('{{ $barang->nama_barang }}', '{{ $barang->jumlah }}', '{{ $barang->lokasi_id }}', '{{ $barang->kode_rfid }}', '{{ $barang->id }}')">EDIT</button>
                                 <form action="{{ route('barang.destroy', $barang->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
@@ -80,7 +80,12 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Lokasi</label>
-                <input type="text" name="lokasi" class="w-full px-3 py-2 border rounded-lg" placeholder="Masukkan lokasi" required />
+                <select name="lokasi_id" class="w-full px-3 py-2 border rounded-lg" required>
+                    <option value="">Pilih Lokasi</option>
+                    @foreach($lokasi as $lokasiItem)
+                        <option value="{{ $lokasiItem->id }}">{{ $lokasiItem->lokasi }}</option>
+                    @endforeach
+                </select>
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
@@ -111,7 +116,14 @@
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Lokasi</label>
-                <input type="text" name="lokasi" class="w-full px-3 py-2 border rounded-lg" id="editLokasi" placeholder="Masukkan lokasi" required />
+                <select name="lokasi_id" class="w-full px-3 py-2 border rounded-lg" id="editLokasi" required>
+                    <option value="">Pilih Lokasi</option>
+                    @foreach($lokasi as $lokasiItem)
+                        <option value="{{ $lokasiItem->id }}" {{ old('lokasi') == $lokasiItem->id ? 'selected' : '' }}>
+                            {{ $lokasiItem->lokasi }}
+                        </option>
+                    @endforeach
+                </select>
             </div>
             <div class="mb-4">
                 <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
@@ -150,10 +162,10 @@
     const editBarang = document.getElementById('edit-barang');
     const editFormContent = editBarang.querySelector('div');
 
-    function openEditForm(nama, jumlah, lokasi, kodeRFID, id) {
+    function openEditForm(nama, jumlah, lokasi_id, kodeRFID, id) {
         document.getElementById('editNamaBarang').value = nama;
         document.getElementById('editJumlah').value = jumlah;
-        document.getElementById('editLokasi').value = lokasi;
+        document.getElementById('editLokasi').value = lokasi_id;
         document.getElementById('editKodeRFID').value = kodeRFID;
 
         const editForm = document.getElementById('editForm');

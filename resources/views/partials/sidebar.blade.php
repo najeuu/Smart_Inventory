@@ -21,6 +21,10 @@
                 <span class="material-icons mr-4">inventory</span>
                 Data Barang
             </a>
+            <a href="/lokasi" id="lokasi" class="flex items-center px-4 py-1 text-black hover:bg-orange-400 rounded-r-full mr-4">
+                <span class="material-icons mr-4">location_on</span>
+                Lokasi
+            </a>
             <a href="/peminjaman" id="peminjaman" class="flex items-center px-4 py-1  text-black hover:bg-orange-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">shopping_cart</span>
                 Peminjaman

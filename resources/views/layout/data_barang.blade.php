@@ -1,7 +1,7 @@
 <head>
     @include('partials.head')
     <style>
-        #databarang {
+        #data_barang {
          background:white
         }
     </style>

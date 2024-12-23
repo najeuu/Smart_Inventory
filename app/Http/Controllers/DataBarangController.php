@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Barang;
+use App\Models\Lokasi;
 use PDF;
 
 class DataBarangController extends Controller
@@ -14,7 +15,7 @@ class DataBarangController extends Controller
         $data = Barang::paginate(10);
 
         // Mengirim data ke view 'laporan'
-        return view('laporan', compact('data')); 
+        return view('laporan', compact('data'));
     }
 
     public function downloadPDF()
@@ -28,16 +29,17 @@ class DataBarangController extends Controller
     public function show()
     {
         $data = Barang::get();
-        return view('data_barang', compact('data'));
+        $lokasi = Lokasi::all();
+        return view('data_barang', compact('data', 'lokasi'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kode_rfid' => 'required|unique:barangs,kode_rfid',
+        'kode_rfid' => 'required|unique:barangs,kode_rfid',
         'nama_barang' => 'required',
         'jumlah' => 'required|integer|min:1',
-        'lokasi' => 'required',
+        'lokasi_id' => 'required|exists:lokasi,id',
     ], [
         'kode_rfid.required' => 'RFID Tag harus diisi.',
         'kode_rfid.unique' => 'RFID Tag sudah digunakan.',
@@ -45,10 +47,15 @@ class DataBarangController extends Controller
         'jumlah.required' => 'Jumlah harus diisi.',
         'jumlah.integer' => 'Jumlah harus berupa angka.',
         'jumlah.min' => 'Jumlah harus lebih dari atau sama dengan 0.',
-        'lokasi.required' => 'Lokasi harus diisi.',
+        'lokasi_id.required' => 'Lokasi harus diisi.',
     ]);
 
-        Barang::create($request->all());
+        Barang::create([
+            'nama_barang' => $request->nama_barang,
+            'jumlah' => $request->jumlah,
+            'lokasi_id' => $request->lokasi_id,
+            'kode_rfid' => $request->kode_rfid,
+        ]);
 
         return redirect()->route('data_barang')->with('success', 'Barang baru berhasil ditambahkan ke dalam sistem.');
     }
@@ -58,7 +65,7 @@ class DataBarangController extends Controller
         $request->validate([
         'nama_barang' => 'required|string|max:255',
         'jumlah' => 'required|integer|min:1',
-        'lokasi' => 'required|string|max:255',
+        'lokasi_id' => 'required|string|max:255',
         'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
     ], [
         'kode_rfid.required' => 'RFID Tag harus diisi.',
@@ -67,11 +74,16 @@ class DataBarangController extends Controller
         'jumlah.required' => 'Jumlah harus diisi.',
         'jumlah.integer' => 'Jumlah harus berupa angka.',
         'jumlah.min' => 'Jumlah harus lebih dari atau sama dengan 0.',
-        'lokasi.required' => 'Lokasi harus diisi.',
+        'lokasi_id.required' => 'Lokasi harus diisi.',
     ]);
 
         $barang = Barang::findOrFail($id);
-        $barang->update($request->all());
+        $barang->update([
+            'nama_barang' => $request->nama_barang,
+            'jumlah' => $request->jumlah,
+            'lokasi_id' => $request->lokasi_id,
+            'kode_rfid' => $request->kode_rfid,
+        ]);
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil diperbarui.');
     }

@@ -36,7 +36,7 @@
                         <td class="py-3 border-t border-gray-300 text-center">{{ $index + 1 }}</td>
                         <td class="px-2 py-3 border-t text-left border-gray-300">{{ $barang->nama_barang }}</td>
                         <td class="py-3 border-t border-gray-300 text-center">{{ $barang->jumlah }}</td>
-                        <td class="px-2 py-3 border-t border-gray-300 text-center">{{ $barang->lokasi }}</td>
+                        <td class="px-2 py-3 border-t border-gray-300 text-center">{{ $barang->lokasi->lokasi }}</td>
                         <td class="px-2 py-3 border-t border-gray-300 text-center">{{ $barang->kode_rfid }}</td> <!-- Menampilkan Kode RFID -->
                     </tr>
                     @endforeach

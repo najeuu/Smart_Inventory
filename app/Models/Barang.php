@@ -14,7 +14,7 @@ class Barang extends Model
     protected $fillable = [
         'nama_barang',
         'jumlah',
-        'lokasi',
+        'lokasi_id',
         'kode_rfid',
     ];
 
@@ -32,15 +32,20 @@ class Barang extends Model
             $this->save();
             return true;
         }
-        return false; 
+        return false;
     }
 
     public function increaseQuantity($quantity)
-{
-    // menambah jumlah barang dr pengembalian
-    $this->jumlah += $quantity;
-    $this->save();
-}
+    {
+        // menambah jumlah barang dr pengembalian
+        $this->jumlah += $quantity;
+        $this->save();
 
+    }
+
+    public function lokasi()
+    {
+        return $this->belongsTo(Lokasi::class, 'lokasi_id');
+    }
 
 }
