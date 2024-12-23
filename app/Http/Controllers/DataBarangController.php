@@ -36,19 +36,19 @@ class DataBarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-        'kode_rfid' => 'required|unique:barangs,kode_rfid',
-        'nama_barang' => 'required',
-        'jumlah' => 'required|integer|min:1',
-        'lokasi_id' => 'required|exists:lokasi,id',
-    ], [
-        'kode_rfid.required' => 'RFID Tag harus diisi.',
-        'kode_rfid.unique' => 'RFID Tag sudah digunakan.',
-        'nama_barang.required' => 'Nama barang harus diisi.',
-        'jumlah.required' => 'Jumlah harus diisi.',
-        'jumlah.integer' => 'Jumlah harus berupa angka.',
-        'jumlah.min' => 'Jumlah harus lebih dari atau sama dengan 0.',
-        'lokasi_id.required' => 'Lokasi harus diisi.',
-    ]);
+            'kode_rfid' => 'required|unique:barangs,kode_rfid',
+            'nama_barang' => 'required',
+            'jumlah' => 'required|integer|min:1',
+            'lokasi_id' => 'required|exists:lokasi,id',
+        ], [
+            'kode_rfid.required' => 'RFID Tag harus diisi',
+            'kode_rfid.unique' => 'RFID Tag sudah digunakan',
+            'nama_barang.required' => 'Nama barang harus diisi',
+            'jumlah.required' => 'Jumlah harus diisi',
+            'jumlah.integer' => 'Jumlah harus berupa angka',
+            'jumlah.min' => 'Jumlah barang harus lebih dari 0',
+            'lokasi_id.required' => 'Lokasi harus diisi',
+        ]);
 
         Barang::create([
             'nama_barang' => $request->nama_barang,
@@ -63,19 +63,19 @@ class DataBarangController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-        'nama_barang' => 'required|string|max:255',
-        'jumlah' => 'required|integer|min:1',
-        'lokasi_id' => 'required|string|max:255',
-        'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
-    ], [
-        'kode_rfid.required' => 'RFID Tag harus diisi.',
-        'kode_rfid.unique' => 'RFID Tag sudah digunakan.',
-        'nama_barang.required' => 'Nama barang harus diisi.',
-        'jumlah.required' => 'Jumlah harus diisi.',
-        'jumlah.integer' => 'Jumlah harus berupa angka.',
-        'jumlah.min' => 'Jumlah harus lebih dari atau sama dengan 0.',
-        'lokasi_id.required' => 'Lokasi harus diisi.',
-    ]);
+            'nama_barang' => 'required|string|max:255',
+            'jumlah' => 'required|integer|min:1',
+            'lokasi_id' => 'required|exists:lokasi,id',
+            'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
+        ], [
+            'kode_rfid.required' => 'RFID Tag harus diisi',
+            'kode_rfid.unique' => 'RFID Tag sudah digunakan',
+            'nama_barang.required' => 'Nama barang harus diisi',
+            'jumlah.required' => 'Jumlah harus diisi',
+            'jumlah.integer' => 'Jumlah harus berupa angka',
+            'jumlah.min' => 'Jumlah barang harus lebih dari 0',
+            'lokasi_id.required' => 'Lokasi harus diisi',
+        ]);
 
         $barang = Barang::findOrFail($id);
         $barang->update([
@@ -92,9 +92,9 @@ class DataBarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
         // Cek apakah barang sedang dipinjam
-    if ($barang->peminjaman()->exists()) {
-        return redirect()->route('data_barang')->with('error', 'Barang sedang dipinjam, tidak dapat dihapus.');
-    }
+        if ($barang->peminjaman()->exists()) {
+            return redirect()->route('data_barang')->with('error', 'Barang sedang dipinjam, tidak dapat dihapus.');
+        }
         $barang->delete();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus dari sistem.');
