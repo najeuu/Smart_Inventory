@@ -29,7 +29,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //Dasboard
 Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
-
+Route::get('/dashboard/almost-out-items', [DasboardController::class, 'getAlmostOutItems']);
 
 //Data barang
 Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');

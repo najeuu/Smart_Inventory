@@ -13,7 +13,7 @@ class CreatePeminjamanTable extends Migration
             $table->string('nama_mahasiswa');
             $table->string('nim');
             $table->string('jenis_barang');
-            $table->foreignId('barang_id')->constrained('barangs')->onDelete('cascade'); // untuk menghubungkan ke tabel 'barangs'
+            $table->foreignId('barang_id')->nullable()->constrained('barangs')->onDelete('cascade');
             $table->integer('total_barang');
             $table->date('tanggal_peminjaman');
             $table->timestamps();
