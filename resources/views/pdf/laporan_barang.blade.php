@@ -42,26 +42,30 @@
     <h1>Laporan Barang</h1>
 
     <table>
-        <thead>
-            <tr>
-                <th>No</th>
-                <th>Nama Barang</th>
-                <th>Jumlah</th>
-                <th>Lokasi</th>
-                <th>Kode RFID</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($data as $index => $barang)
-            <tr>
-                <td>{{ $index + 1 }}</td>
-                <td>{{ $barang->nama_barang }}</td>
-                <td>{{ $barang->jumlah }}</td>
-                <td>{{ $barang->lokasi }}</td>
-                <td>{{ $barang->kode_rfid }}</td> <!-- Menampilkan Kode RFID -->
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+    <thead>
+        <tr>
+            <th>No</th>
+            <th>Nama Barang</th>
+            <th>Jumlah</th>
+            <th>Lokasi</th>
+            <th>Kode RFID</th>
+        </tr>
+    </thead>
+    <tbody>
+        @forelse ($data as $index => $barang)
+        <tr>
+            <td>{{ $index + 1 }}</td>
+            <td>{{ $barang->nama_barang }}</td>
+            <td>{{ $barang->jumlah }}</td>
+            <td>{{ $barang->lokasi->lokasi }}</td>
+            <td>{{ $barang->kode_rfid }}</td>
+        </tr>
+        @empty
+        <tr>
+            <td colspan="5" style="text-align: center;">Tidak ada data barang tersedia.</td>
+        </tr>
+        @endforelse
+    </tbody>
+</table>
 </body>
 </html>

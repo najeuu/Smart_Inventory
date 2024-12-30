@@ -7,6 +7,17 @@ use App\Models\Lokasi;
 
 class LokasiController extends Controller
 {
+    public function generatePDF()
+    {
+        // Mengambil semua data lokasi beserta barang terkait
+        $data = Lokasi::with('barang')->get(); // Mengambil data lokasi dan barang yang terkait
+        
+        // Buat PDF dari view
+        $pdf = PDF::loadView('lokasi_pdf', compact('data'));
+
+        // Download file PDF
+        return $pdf->download('data_lokasi_dan_barang.pdf');
+    }
     public function show()
     {
         $data = Lokasi::get();

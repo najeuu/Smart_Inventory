@@ -57,10 +57,9 @@ Route::put('/lokasi/{id}', [LokasiController::class, 'update'])->name('lokasi.up
 Route::delete('/lokasi/{id}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
 
 //laporan
+// routes/web.php
 Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');
-
-// Route untuk mengunduh laporan PDF
-Route::get('/laporan/download', [DataBarangController::class, 'downloadPDF'])->name('laporan.download');
+Route::get('/laporan/download/{format?}', [DataBarangController::class, 'downloadLaporan'])->name('laporan.download');
 
 //setting
 Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');

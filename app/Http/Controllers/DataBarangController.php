@@ -6,24 +6,58 @@ use Illuminate\Http\Request;
 use App\Models\Barang;
 use App\Models\Lokasi;
 use PDF;
+use App\Exports\BarangExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class DataBarangController extends Controller
 {
     public function index()
     {
         // Mengambil semua data barang dari model Barang
-        $data = Barang::paginate(10);
+        $data = Barang::with('lokasi')->paginate(10);
 
         // Mengirim data ke view 'laporan'
         return view('laporan', compact('data'));
     }
 
-    public function downloadPDF()
+    public function downloadLaporan(Request $request)
     {
-        \Log::info('Download PDF method called');
-        $data = Barang::all();
-        $pdf = PDF::loadView('pdf.laporan_barang', compact('data'));
-        return $pdf->download('laporan_barang.pdf');
+        $data = $this->getDataForReport($request);
+
+        // Validasi format laporan
+        if ($request->format === 'pdf') {
+            // Mengunduh PDF
+            return PDF::loadView('pdf.laporan_barang', compact('data'))->download('laporan_barang.pdf');
+        } elseif ($request->format === 'excel') {
+            // Mengunduh Excel
+            return Excel::download(new BarangExport($data), 'laporan_barang.xlsx');
+        } else {
+            // Kembali jika format tidak valid
+            return back()->with('error', 'Pilih format laporan');
+        }
+    }
+
+    private function getDataForReport(Request $request)
+    {
+        // Ambil data barang dan filter berdasarkan tanggal jika ada
+        $data = Barang::with('lokasi');
+
+        if ($this->validateDateRange($request->tanggal_awal, $request->tanggal_akhir)) {
+            $data = $data->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
+        }
+
+        return $data->get();
+    }
+
+    private function validateDateRange($startDate, $endDate)
+    {
+        if (!empty($startDate) && !empty($endDate)) {
+            if (strtotime($startDate) > strtotime($endDate)) {
+                return back()->with('error', 'Rentang tanggal tidak valid. Tanggal akhir harus setelah tanggal awal.');
+            }
+            return true;
+        }
+        return true; // Jika tidak ada tanggal, tampilkan semua data
     }
 
     public function show()
@@ -40,14 +74,6 @@ class DataBarangController extends Controller
             'nama_barang' => 'required',
             'jumlah' => 'required|integer|min:1',
             'lokasi_id' => 'required|exists:lokasi,id',
-        ], [
-            'kode_rfid.required' => 'RFID Tag harus diisi',
-            'kode_rfid.unique' => 'RFID Tag sudah digunakan',
-            'nama_barang.required' => 'Nama barang harus diisi',
-            'jumlah.required' => 'Jumlah harus diisi',
-            'jumlah.integer' => 'Jumlah harus berupa angka',
-            'jumlah.min' => 'Jumlah barang harus lebih dari 0',
-            'lokasi_id.required' => 'Lokasi harus diisi',
         ]);
 
         Barang::create([
@@ -67,14 +93,6 @@ class DataBarangController extends Controller
             'jumlah' => 'required|integer|min:1',
             'lokasi_id' => 'required|exists:lokasi,id',
             'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
-        ], [
-            'kode_rfid.required' => 'RFID Tag harus diisi',
-            'kode_rfid.unique' => 'RFID Tag sudah digunakan',
-            'nama_barang.required' => 'Nama barang harus diisi',
-            'jumlah.required' => 'Jumlah harus diisi',
-            'jumlah.integer' => 'Jumlah harus berupa angka',
-            'jumlah.min' => 'Jumlah barang harus lebih dari 0',
-            'lokasi_id.required' => 'Lokasi harus diisi',
         ]);
 
         $barang = Barang::findOrFail($id);
@@ -91,10 +109,12 @@ class DataBarangController extends Controller
     public function destroy($id)
     {
         $barang = Barang::findOrFail($id);
+
         // Cek apakah barang sedang dipinjam
         if ($barang->peminjaman()->exists()) {
             return redirect()->route('data_barang')->with('error', 'Barang sedang dipinjam, tidak dapat dihapus.');
         }
+
         $barang->delete();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus dari sistem.');
