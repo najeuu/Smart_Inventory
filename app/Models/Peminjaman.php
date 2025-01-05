@@ -12,11 +12,12 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
 
     protected $fillable = [
-        'nama_mahasiswa', 
-        'nim', 
-        'jenis_barang', 
-        'total_barang', 
-        'tanggal_peminjaman' 
+        'nama_mahasiswa',
+        'nim',
+        'jenis_barang',
+        'barang_id', 
+        'total_barang',
+        'tanggal_peminjaman'
     ];
 
     // relasi dengan Barang
@@ -26,7 +27,7 @@ class Peminjaman extends Model
     }
     public function barangPinjam()
     {
-        return $this->hasMany(Barang::class, 'peminjaman_id');  
+        return $this->hasMany(Barang::class, 'peminjaman_id');
     }
 
     // relasi dengan Pengembalian

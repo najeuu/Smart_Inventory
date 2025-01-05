@@ -67,23 +67,35 @@ class DataBarangController extends Controller
         return view('data_barang', compact('data', 'lokasi'));
     }
 
+    // Tambahkan method baru di DataBarangController
+
+    public function checkRFIDExists($kodeRFID)
+    {
+        $exists = Barang::where('kode_rfid', $kodeRFID)->exists();
+        return response()->json(['exists' => $exists]);
+    }
+
     public function store(Request $request)
     {
         $request->validate([
-            'kode_rfid' => 'required|unique:barangs,kode_rfid',
-            'nama_barang' => 'required',
+            'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid',
+            'nama_barang' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:1',
             'lokasi_id' => 'required|exists:lokasi,id',
         ]);
 
-        Barang::create([
-            'nama_barang' => $request->nama_barang,
-            'jumlah' => $request->jumlah,
-            'lokasi_id' => $request->lokasi_id,
-            'kode_rfid' => $request->kode_rfid,
-        ]);
+        try {
+            $barang = Barang::create([
+                'nama_barang' => $request->nama_barang,
+                'jumlah' => $request->jumlah,
+                'lokasi_id' => $request->lokasi_id,
+                'kode_rfid' => str_replace(' ', '', $request->kode_rfid),
+            ]);
 
-        return redirect()->route('data_barang')->with('success', 'Barang baru berhasil ditambahkan ke dalam sistem.');
+            return redirect()->route('data_barang')->with('success', 'Barang berhasil ditambahkan.');
+        } catch (\Exception $e) {
+            return redirect()->route('data_barang')->with('error', 'Gagal menambahkan barang: ' . $e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)
@@ -118,5 +130,25 @@ class DataBarangController extends Controller
         $barang->delete();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus dari sistem.');
+    }
+
+    public function saveRfidTag(Request $request)
+    {
+        $request->validate([
+            'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid',
+        ]);
+
+        session(['kode_rfid' => $request->kode_rfid]);
+
+        return response()->json(['message' => 'RFID tag saved to session.']);
+    }
+
+    public function getBarangByRFID($kodeRFID)
+    {
+        $barang = Barang::where('kode_rfid', $kodeRFID)->first();
+        return response()->json([
+            'success' => !is_null($barang),
+            'data' => $barang
+        ]);
     }
 }

@@ -3,6 +3,10 @@
 @section('title', 'Data Barang')
 
 @section('content')
+    @push('scripts')
+        <script src="{{ asset('js/reader.js') }}" type="module"></script>
+        <script src="{{ asset('js/rfid-scanner.js') }}" type="module"></script>
+    @endpush
     <div class="bg-gray-100 font-poppins leading-normal tracking-normal">
         <!-- Main content -->
         <div class="w-full p-8">
@@ -50,7 +54,13 @@
                                 <td class="py-2 border-t border-gray-300">
                                     <div class="flex items-center justify-center font-semibold h-1 text-center">
                                         <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]"
-                                            onclick="openEditForm('{{ $barang->nama_barang }}', '{{ $barang->jumlah }}', '{{ $barang->lokasi }}', '{{ $barang->kode_rfid }}', '{{ $barang->id }}')">
+                                            onclick="openEditForm(
+        '{{ $barang->nama_barang }}',
+        '{{ $barang->jumlah }}',
+        '{{ $barang->lokasi_id }}',
+        '{{ $barang->kode_rfid }}',
+        '{{ $barang->id }}'
+    )">
                                             EDIT
                                         </button>
                                         <form id="delete-form-{{ $barang->id }}"
@@ -118,11 +128,18 @@
                 <!-- Kode RFID -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
-                    <input type="text" name="kode_rfid" class="w-full px-3 py-2 border rounded-lg"
-                        placeholder="Scan Tag RFID" value="{{ old('kode_rfid') }}" required />
-                    @error('kode_rfid')
-                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
-                    @enderror
+                    <div class="flex items-center space-x-2">
+                        <input type="text" name="kode_rfid" id="kodeRFID" class="w-full px-3 py-2 border rounded-lg"
+                            placeholder="Scan Tag RFID" readonly required />
+                        <button type="button" id="togglePortBtn"
+                            class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                            Open Port
+                        </button>
+                        <button type="button" id="startScanBtn"
+                            class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg" disabled>
+                            Start Scanning
+                        </button>
+                    </div>
                 </div>
                 <!-- Tombol -->
                 <div class="flex justify-end">
@@ -173,8 +190,11 @@
                 <!-- Kode RFID -->
                 <div class="mb-4">
                     <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
-                    <input type="text" name="kode_rfid" class="w-full px-3 py-2 border rounded-lg" id="editKodeRFID"
-                        placeholder="Scan Tag RFID" required />
+                    <input type="text" name="kode_rfid" class="w-full px-3 py-2 border rounded-lg"
+                        placeholder="Scan Tag RFID" v-model="kodeRFID" readonly />
+                    @error('kode_rfid')
+                        <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                    @enderror
                 </div>
                 <!-- Tombol -->
                 <div class="flex justify-end">
@@ -188,26 +208,19 @@
 
     <!-- JavaScript -->
     <script>
-        // Validasi input jumlah
-        document.querySelector('[name="jumlah"]').addEventListener('input', function(e) {
-            if (e.target.value <= 0) {
-                alert('Jumlah barang harus lebih dari 0.');
-                e.target.value = '';
-            }
-        });
-
-        // Form Tambah Barang
-        const tambahBarang = document.getElementById('tambah-barang');
-        const formContent = tambahBarang.querySelector('div');
-
-        function openForm() {
+        // Definisikan fungsi-fungsi di scope global
+        window.openForm = function() {
+            const tambahBarang = document.getElementById('tambah-barang');
+            const formContent = tambahBarang.querySelector('div');
             tambahBarang.classList.remove('pointer-events-none', 'opacity-0');
             tambahBarang.classList.add('opacity-100');
             formContent.classList.remove('-translate-y-full');
             formContent.classList.add('translate-y-0');
         }
 
-        function closeForm() {
+        window.closeForm = function() {
+            const tambahBarang = document.getElementById('tambah-barang');
+            const formContent = tambahBarang.querySelector('div');
             formContent.classList.remove('translate-y-0');
             formContent.classList.add('-translate-y-full');
             tambahBarang.classList.remove('opacity-100');
@@ -217,30 +230,44 @@
             }, 500);
         }
 
-        // Form Edit Barang
-        const editBarang = document.getElementById('edit-barang');
-        const editFormContent = editBarang.querySelector('div');
+        window.openEditForm = function(nama, jumlah, lokasiId, kodeRFID, id) {
+            const editBarang = document.getElementById('edit-barang');
+            const editFormContent = editBarang.querySelector('div');
 
-        function openEditForm(nama, jumlah, lokasi, kodeRFID, id) {
-            // Set nilai pada form edit
+            // Set values
             document.getElementById('editNamaBarang').value = nama;
             document.getElementById('editJumlah').value = jumlah;
-            document.getElementById('editLokasi').value = lokasi; // Dropdown lokasi
-            document.getElementById('editKodeRFID').value = kodeRFID;
 
-            // Set action form dengan ID barang
+            // Set kode RFID
+            const rfidInput = editBarang.querySelector('[name="kode_rfid"]');
+            if (rfidInput) {
+                rfidInput.value = kodeRFID;
+            }
+
+            // Set lokasi dengan mencari option yang sesuai
+            const lokasiSelect = document.getElementById('editLokasi');
+            for (let option of lokasiSelect.options) {
+                if (option.value === lokasiId) {
+                    option.selected = true;
+                    break;
+                }
+            }
+
+            // Set form action
             const editForm = document.getElementById('editForm');
             editForm.action = `/data_barang/${id}`;
 
-            // Tampilkan form edit
+            // Tampilkan form
             editBarang.classList.remove('pointer-events-none', 'opacity-0');
             editBarang.classList.add('opacity-100');
             editFormContent.classList.remove('-translate-y-full');
             editFormContent.classList.add('translate-y-0');
         }
 
-        function closeEditForm() {
-            // Tutup form edit
+        window.closeEditForm = function() {
+            const editBarang = document.getElementById('edit-barang');
+            const editFormContent = editBarang.querySelector('div');
+
             editFormContent.classList.remove('translate-y-0');
             editFormContent.classList.add('-translate-y-full');
             editBarang.classList.remove('opacity-100');
@@ -250,14 +277,119 @@
             }, 500);
         }
 
-        // Konfirmasi Hapus
-        function confirmDelete(id) {
-            const confirmed = confirm("Apakah Anda yakin ingin menghapus data ini?");
-            if (confirmed) {
-                // Submit form jika pengguna menekan OK
+        window.confirmDelete = function(id) {
+            if (confirm("Apakah Anda yakin ingin menghapus data ini?")) {
                 document.getElementById(`delete-form-${id}`).submit();
             }
-            // Tidak ada tindakan jika pengguna menekan Cancel
         }
+        // Inside your DOMContentLoaded event listener
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!navigator.serial) {
+                alert('Browser Anda tidak mendukung Web Serial API. Gunakan Chrome atau Edge terbaru.');
+                return;
+            }
+
+            const formTambah = document.querySelector('#tambah-barang form');
+            let scannerTambah = null;
+
+            function initializeRFIDScanner(formId) {
+                const form = document.getElementById(formId);
+                if (!form) return;
+
+                const rfidInput = form.querySelector('[name="kode_rfid"]');
+                const togglePortBtn = form.querySelector('.bg-blue-500');
+                const startScanBtn = form.querySelector('.bg-green-500');
+
+                if (!rfidInput || !togglePortBtn || !startScanBtn) return;
+
+                const scanner = new RFIDScanner(rfidInput);
+
+                togglePortBtn.addEventListener('click', async () => {
+                    if (scanner.deviceStatus === 'Closed') {
+                        togglePortBtn.disabled = true;
+                        const success = await scanner.openPort();
+                        togglePortBtn.disabled = false;
+
+                        if (success) {
+                            togglePortBtn.textContent = 'Close Port';
+                            togglePortBtn.classList.replace('bg-blue-500', 'bg-red-500');
+                            startScanBtn.disabled = false;
+                        }
+                    } else {
+                        const success = await scanner.closePort();
+                        if (success) {
+                            togglePortBtn.textContent = 'Open Port';
+                            togglePortBtn.classList.replace('bg-red-500', 'bg-blue-500');
+                            startScanBtn.disabled = true;
+                        }
+                    }
+                });
+
+                startScanBtn.addEventListener('click', async () => {
+                    if (scanner.isScanning) return; // Prevent multiple scans
+
+                    startScanBtn.disabled = true;
+                    startScanBtn.textContent = 'Scanning...';
+
+                    const tagHex = await scanner.startScanning();
+
+                    if (tagHex) {
+                        rfidInput.value = tagHex;
+                        // Disable scanning after successful read
+                        startScanBtn.textContent = 'Tag Scanned';
+                        startScanBtn.disabled = true;
+                        togglePortBtn.click(); // Auto close port after successful scan
+                    } else {
+                        startScanBtn.disabled = false;
+                        startScanBtn.textContent = 'Start Scanning';
+                    }
+                });
+
+                return scanner;
+            }
+
+            // Initialize scanner for tambah form
+            scannerTambah = initializeRFIDScanner('tambah-barang');
+
+            // Handle form submission
+            // Handle form submission
+            formTambah.addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                try {
+                    const formData = new FormData(this);
+
+                    // Submit form using fetch
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    });
+
+                    if (response.ok) {
+                        // Reset scanner and form after successful submission
+                        if (scannerTambah) {
+                            scannerTambah.resetScannedTags();
+                        }
+                        this.reset();
+                        closeForm();
+
+                        // Show success alert
+                        alert('Data barang berhasil ditambahkan!');
+
+                        // Reload page to show updated data
+                        window.location.reload();
+                    } else {
+                        throw new Error('Form submission failed');
+                    }
+                } catch (error) {
+                    console.error('Error submitting form:', error);
+                    alert('Terjadi kesalahan saat menyimpan data. Silakan coba lagi.');
+                }
+            });
+        });
     </script>
 @endsection

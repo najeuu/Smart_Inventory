@@ -1,4 +1,5 @@
 <head>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('partials.head')
     <style>
         #pengembalian {
@@ -18,6 +19,10 @@
             @yield('content')
         </main>
     </div>
+    <script src="{{ asset('js/rfid-scanner-laravel.js') }}"></script>
 </body>
 
 </html>
+@section('scripts')
+    @stack('scripts')
+@endsection

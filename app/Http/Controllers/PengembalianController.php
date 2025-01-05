@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Barang;
@@ -22,6 +23,7 @@ class PengembalianController extends Controller
         // Map data barang
         $barangDipinjam = $peminjaman->map(function ($pinjam) {
             return [
+                'id' => $pinjam->id,
                 'jenis_barang' => $pinjam->jenis_barang,
                 'total_barang' => $pinjam->total_barang,
             ];
@@ -35,48 +37,68 @@ class PengembalianController extends Controller
     {
         $request->validate([
             'nim' => 'required|string|exists:peminjaman,nim',
-            'nama_barang' => 'required|string',
-            'total_barang' => 'required|integer|min:1',
+            'barang_ids' => 'required|array',
+            'barang_ids.*' => 'exists:peminjaman,id',
             'tanggal_pengembalian' => 'required|date',
         ]);
 
-        $nim = $request->nim;
-        $namaBarang = $request->nama_barang;
-        $totalBarang = $request->total_barang;
-        $tanggalPengembalian = $request->tanggal_pengembalian;
+        DB::beginTransaction();
+        try {
+            foreach ($request->barang_ids as $peminjamanId) {
+                $peminjaman = Peminjaman::findOrFail($peminjamanId);
 
-        $peminjaman = Peminjaman::where('nim', $nim)
-            ->where('jenis_barang', $namaBarang)
-            ->first();
+                // Create pengembalian record
+                Pengembalian::create([
+                    'nim' => $request->nim,
+                    'peminjaman_id' => $peminjamanId,
+                    'jenis_barang' => $peminjaman->jenis_barang,
+                    'jumlah' => $peminjaman->total_barang,
+                    'tanggal_pengembalian' => $request->tanggal_pengembalian,
+                ]);
 
-        // jika peminjaman tidak ditemukan
-        if (!$peminjaman) {
-            return back()->with('error', 'Peminjaman tidak ditemukan.');
+                // Update stock
+                $barang = Barang::where('nama_barang', $peminjaman->jenis_barang)->first();
+                if ($barang) {
+                    $barang->increaseQuantity($peminjaman->total_barang);
+                }
+            }
+
+            DB::commit();
+            return redirect()->route('pengembalian.cari', ['nim' => $request->nim])
+                ->with('success', 'Barang berhasil dikembalikan!');
+        } catch (\Exception $e) {
+            DB::rollback();
+            return back()->with('error', 'Gagal memproses pengembalian: ' . $e->getMessage());
+        }
+    }
+
+    public function checkRegisteredRFID($kodeRFID)
+    {
+        $barang = Barang::where('kode_rfid', $kodeRFID)->first();
+
+        if (!$barang) {
+            return response()->json([
+                'exists' => false
+            ]);
         }
 
-        // jika barang sudah dikembalikan
-        $pengembalian = Pengembalian::where('peminjaman_id', $peminjaman->id)
-            ->first();
-        if ($pengembalian) {
-            return back()->with('error', 'Barang sudah dikembalikan sebelumnya.');
-        }
+        // Get borrowed items for this NIM
+        $borrowedItems = Peminjaman::where('nim', request('nim'))
+            ->whereDoesntHave('pengembalian')
+            ->where('jenis_barang', $barang->nama_barang)
+            ->get()
+            ->map(function ($pinjam) {
+                return [
+                    'id' => $pinjam->id,
+                    'nama_barang' => $pinjam->jenis_barang,
+                    'jumlah' => $pinjam->total_barang,
+                    'is_borrowed' => true
+                ];
+            });
 
-        // menypan pengembalian
-        $pengembalian = Pengembalian::create([
-            'nim' => $nim,
-            'jenis_barang' => $namaBarang,
-            'peminjaman_id' => $peminjaman->id,
-            'jumlah' => $totalBarang,
-            'tanggal_pengembalian' => $tanggalPengembalian,
+        return response()->json([
+            'exists' => true,
+            'barang' => $borrowedItems
         ]);
-
-        // update stok barang yg dikembalikan
-        $barang = Barang::where('nama_barang', $namaBarang)->first();
-        if ($barang) {
-            $barang->increaseQuantity($totalBarang);
-        }
-
-        return redirect()->route('pengembalian.cari', ['nim' => $nim])
-            ->with('success', 'Barang berhasil dikembalikan!');
     }
 }

@@ -3,6 +3,9 @@
 @section('title', 'Pengembalian')
 
 @section('content')
+    @push('scripts')
+        <script src="{{ asset('js/registered-rfid-scanner.js') }}"></script>
+    @endpush
     <div class="flex flex-col">
 
         @if (session('error'))
@@ -94,6 +97,8 @@
                                 <thead>
                                     <tr class="bg-white text-black">
                                         <th class="py-3 font-bold text-center border-t border-gray-300">No</th>
+                                        <th class="px-2 py-2 font-bold text-center border-t border-gray-300">Kode RFID
+                                        </th>
                                         <th class="px-2 py-2 font-bold text-center border-t border-gray-300">Nama Barang
                                         </th>
                                         <th class="py-3 font-bold text-center border-t border-gray-300">Total Barang</th>
@@ -125,24 +130,47 @@
                                     value="{{ $nim }}" required readonly />
                             </div>
                             <div class="mb-4">
+                                <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
+                                <div class="flex items-center space-x-2">
+                                    <input type="text" id="kodeRFID" name="kode_rfid"
+                                        class="w-full px-3 py-2 border rounded-lg" readonly required />
+                                    <button type="button" id="togglePortBtn"
+                                        class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
+                                        Open Port
+                                    </button>
+                                    <button type="button" id="startScanBtn"
+                                        class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg" disabled>
+                                        Start Scanning
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Nama Barang</label>
-                                <input type="text" name="nama_barang" class="w-full px-3 py-2 border rounded-lg"
-                                    required />
+                                <select id="namaBarangSelect" name="barang_ids[]" class="w-full px-3 py-2 border rounded-lg"
+                                    required>
+                                    <option value="">Pilih Barang</option>
+                                    @foreach ($barangDipinjam as $barang)
+                                        <option value="{{ $barang['id'] }}" data-jumlah="{{ $barang['total_barang'] }}">
+                                            {{ $barang['jenis_barang'] }} ({{ $barang['total_barang'] }} unit)
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Total Barang</label>
-                                <input type="number" name="total_barang" class="w-full px-3 py-2 border rounded-lg"
-                                    required />
+                                <input type="number" id="totalBarang" name="total_barang"
+                                    class="w-full px-3 py-2 border rounded-lg bg-gray-100" readonly required />
                             </div>
                             <div class="mb-4">
                                 <label class="block text-gray-700 font-medium mb-2">Tanggal Pengembalian</label>
-                                <input type="date" name="tanggal_pengembalian" class="w-full px-3 py-2 border rounded-lg"
-                                    required />
+                                <input type="date" name="tanggal_pengembalian"
+                                    class="w-full px-3 py-2 border rounded-lg" required />
                             </div>
                             <div class="flex justify-end">
                                 <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg mr-2"
                                     onclick="closeForm()">Batal</button>
-                                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Simpan</button>
+                                <button type="submit"
+                                    class="bg-green-500 text-white px-4 py-2 rounded-lg">Simpan</button>
                             </div>
                         </form>
                     </div>
@@ -152,16 +180,96 @@
     </div>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Cek jika ada error
-            const errorMessage = "{{ $error ?? '' }}";
-            if (errorMessage) {
-                const popup = document.getElementById('errorPopup');
-                popup.classList.remove('hidden');
-                setTimeout(() => {
-                    popup.classList.add('hidden');
-                }, 2000);
+        document.addEventListener('DOMContentLoaded', function() {
+            const namaBarangSelect = document.getElementById('namaBarangSelect');
+            const totalBarangInput = document.getElementById('totalBarang');
+
+            // Update total barang when nama barang is selected
+            namaBarangSelect.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const jumlah = selectedOption.getAttribute('data-jumlah');
+                totalBarangInput.value = jumlah || '';
+            });
+
+            // Handle RFID scanner
+            if (!navigator.serial) {
+                alert('Browser Anda tidak mendukung Web Serial API. Gunakan Chrome atau Edge terbaru.');
+                return;
             }
+
+            const formPengembalian = document.getElementById('formPengembalian');
+            const rfidInput = document.getElementById('kodeRFID');
+            const togglePortBtn = document.getElementById('togglePortBtn');
+            const startScanBtn = document.getElementById('startScanBtn');
+
+            const scanner = new RegisteredRFIDScanner(rfidInput);
+
+            togglePortBtn.addEventListener('click', async () => {
+                if (scanner.deviceStatus === 'Closed') {
+                    togglePortBtn.disabled = true;
+                    const success = await scanner.openPort();
+                    togglePortBtn.disabled = false;
+
+                    if (success) {
+                        togglePortBtn.textContent = 'Close Port';
+                        togglePortBtn.classList.replace('bg-blue-500', 'bg-red-500');
+                        startScanBtn.disabled = false;
+                    }
+                } else {
+                    const success = await scanner.closePort();
+                    if (success) {
+                        togglePortBtn.textContent = 'Open Port';
+                        togglePortBtn.classList.replace('bg-red-500', 'bg-blue-500');
+                        startScanBtn.disabled = true;
+                    }
+                }
+            });
+
+            startScanBtn.addEventListener('click', async () => {
+                if (scanner.isScanning) return;
+
+                startScanBtn.disabled = true;
+                startScanBtn.textContent = 'Scanning...';
+
+                const tagHex = await scanner.startScanning();
+
+                if (tagHex) {
+                    rfidInput.value = tagHex;
+                    startScanBtn.textContent = 'Tag Scanned';
+                    startScanBtn.disabled = true;
+                    togglePortBtn.click(); // Auto close port
+                } else {
+                    startScanBtn.disabled = false;
+                    startScanBtn.textContent = 'Start Scanning';
+                }
+            });
+
+            // Handle form submission
+            formPengembalian.querySelector('form').addEventListener('submit', async function(e) {
+                e.preventDefault();
+
+                try {
+                    const formData = new FormData(this);
+                    const response = await fetch(this.action, {
+                        method: 'POST',
+                        body: formData,
+                        headers: {
+                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')
+                                .content
+                        }
+                    });
+
+                    if (response.ok) {
+                        alert('Pengembalian berhasil diproses!');
+                        window.location.reload();
+                    } else {
+                        throw new Error('Gagal memproses pengembalian');
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan saat memproses pengembalian');
+                }
+            });
         });
 
         // Menampilkan tabel

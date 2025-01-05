@@ -36,6 +36,9 @@ Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_ba
 Route::post('/data_barang', [DataBarangController::class, 'store'])->name('barang.store');
 Route::put('/data_barang/{id}', [DataBarangController::class, 'update'])->name('barang.update');
 Route::delete('/data_barang/{id}', [DataBarangController::class, 'destroy'])->name('barang.destroy');
+Route::post('/api/save-rfid-tag', [DataBarangController::class, 'saveRfidTag']);
+Route::get('/api/check-rfid/{kodeRFID}', [DataBarangController::class, 'checkRFIDExists']);
+Route::get('/get-barang-rfid/{kodeRFID}', [DataBarangController::class, 'getBarangByRFID']);
 
 // Peminjaman
 Route::get('/peminjaman', [PeminjamanController::class, 'show'])->name('peminjaman');
@@ -45,6 +48,7 @@ Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('
 Route::get('/pengembalian', [PengembalianController::class, 'cari']);
 Route::get('/pengembalian/cari', [PengembalianController::class, 'cari'])->name('pengembalian.cari');
 Route::post('/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
+Route::get('/api/check-registered-rfid/{kodeRFID}', 'PengembalianController@checkRegisteredRFID');
 
 //riwayat
 Route::get('/riwayat', [RiwayatController::class, 'index']);
@@ -57,7 +61,6 @@ Route::put('/lokasi/{id}', [LokasiController::class, 'update'])->name('lokasi.up
 Route::delete('/lokasi/{id}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
 
 //laporan
-// routes/web.php
 Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');
 Route::get('/laporan/download/{format?}', [DataBarangController::class, 'downloadLaporan'])->name('laporan.download');
 
