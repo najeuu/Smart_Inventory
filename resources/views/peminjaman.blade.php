@@ -9,7 +9,7 @@
         @if (session('success'))
             <div id="success-popup"
                 class="fixed top-0 left-0 w-full h-full bg-gray-700 bg-opacity-50 z-50 flex justify-center items-center opacity-0 pointer-events-none transition-opacity duration-500">
-                <div class="bg-orange-300 h-16 max-w-xs w-auto p-4 rounded-lg shadow-lg text-center">
+                <div class="bg-blue-300 h-16 max-w-xs w-auto p-4 rounded-lg shadow-lg text-center">
                     <p class="font-bold text-white mt-2">{{ session('success') }}</p>
                 </div>
             </div>
@@ -31,7 +31,7 @@
 
             <!-- Button Ajukan Peminjaman -->
             <a href="javascript:void(0)" onclick="openForm()"
-                class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
+                class="bg-blue-300 hover:bg-blue-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
                 <span class="material-symbols-outlined text-[20px] mr-1">add</span>
                 <p class="text-[15px]">Ajukan Peminjaman</p>
             </a>
@@ -40,7 +40,7 @@
             <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
                 <table class="table-auto w-full border-collapse">
                     <thead>
-                        <tr class="bg-orange-300 text-black">
+                        <tr class="bg-blue-300 text-black">
                             <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
                             <th class="py-3 px-4 font-bold text-left">Nama Mahasiswa</th>
                             <th class="py-3 px-4 font-bold text-center">NIM</th>

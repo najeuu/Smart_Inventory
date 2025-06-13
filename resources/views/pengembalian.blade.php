@@ -21,12 +21,12 @@
         @endif
 
         <!-- Mencari Data Mahasiswa -->
-        <div class="mb-8 bg-orange-300 p-6 rounded-lg">
+        <div class="mb-8 bg-blue-300 p-6 rounded-lg">
             <div class="max-w-xl">
                 <label class="text-lg font-bold font-poppins">Cari Data Mahasiswa</label>
                 <form action="{{ route('pengembalian.cari') }}" method="GET" class="mt-2 relative">
                     <input type="text" name="nim" value="{{ old('nim', $nim ?? '') }}" placeholder="NIM"
-                        class="w-full px-4 font-poppins py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-300"
+                        class="w-full px-4 font-poppins py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
                         required>
                     <button type="submit" class="absolute right-3 top-2 text-gray-400 hover:text-gray-600">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -40,11 +40,11 @@
 
         <!-- Menampilkan Data Peminjam -->
         @if (isset($nim))
-            <div class="mb-8 bg-orange-300 p-6 rounded-lg">
+            <div class="mb-8 bg-blue-300 p-6 rounded-lg">
                 <h2 class="text-lg font-bold mb-4 font-poppins">PEMINJAM</h2>
                 <div class="flex flex-wrap gap-2">
                     <button
-                        class="px-4 py-2 bg-white font-poppins border border-gray-300 rounded-lg shadow hover:bg-orange-50"
+                        class="px-4 py-2 bg-white font-poppins border border-gray-300 rounded-lg shadow hover:bg-blue-50"
                         onclick="showTables()">
                         {{ $nim }}
                     </button>
@@ -54,7 +54,7 @@
             <div id="tablesContainer" style="display: none;">
                 <div class="grid grid-cols-5 gap-8">
                     <!-- Tabel Barang Yang Dipinjam -->
-                    <div class="col-span-2 bg-orange-300 rounded-lg shadow-md p-4">
+                    <div class="col-span-2 bg-blue-300 rounded-lg shadow-md p-4">
                         <h2 class="font-bold font-poppins mb-4 text-lg">Barang Yang Dipinjam</h2>
                         <p class="font-poppins">NIM: {{ $nim }}</p>
 
@@ -71,9 +71,9 @@
                                             Barang</th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-orange-50">
+                                <tbody class="bg-blue-50">
                                     @forelse($barangDipinjam as $index => $barang)
-                                        <tr class="hover:bg-orange-100 transition duration-200 font-poppins">
+                                        <tr class="hover:bg-blue-100 transition duration-200 font-poppins">
                                             <td class="py-2 px-4 text-center">{{ $index + 1 }}</td>
                                             <td class="py-2 px-4 text-center">{{ $barang['jenis_barang'] }}</td>
                                             <td class="py-2 px-4 text-center">{{ $barang['total_barang'] }}</td>
@@ -90,7 +90,7 @@
                     </div>
 
                     <!-- Tabel Hasil Scanner -->
-                    <div class="col-span-3 bg-orange-300 rounded-lg shadow-md p-4 mb-6">
+                    <div class="col-span-3 bg-blue-300 rounded-lg shadow-md p-4 mb-6">
                         <h2 class="font-bold mb-6 text-lg">Hasil Scanner</h2>
                         <div class="overflow-x-auto rounded-lg mb-4">
                             <table class="table-auto w-full border-collapse">
@@ -106,7 +106,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody id="scannerTableBody" class="bg-orange-50"></tbody>
+                                <tbody id="scannerTableBody" class="bg-blue-50"></tbody>
                             </table>
                         </div>
                         <button type="button" onclick="prosesPengembalian()"
@@ -280,7 +280,7 @@
         function updateScannerTable(namaBarang, totalBarang, tanggalPengembalian) {
             const tableBody = document.getElementById('scannerTableBody');
             const row = document.createElement('tr');
-            row.classList.add('hover:bg-orange-100');
+            row.classList.add('hover:bg-blue-100');
 
             row.innerHTML = `
         <td class="py-2 px-4 text-center">${tableBody.children.length + 1}</td>

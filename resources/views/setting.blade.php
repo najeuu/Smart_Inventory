@@ -3,7 +3,7 @@
 @section('content')
     <!-- main content -->
     <div class="w-full py-7 flex items-center justify-center min-screen bg-gray-100 font-poppins rounded relative">
-        <div class="w-[400px] h-[530px] bg-orange-300 rounded-xl custom-shadow flex justify-center items-center">
+        <div class="w-[400px] h-[530px] bg-blue-300 rounded-xl custom-shadow flex justify-center items-center">
             <div class="flex flex-col items-center w-[300]">
                 <div class="bg-white w-full h-[300px] mb-8 p-4 rounded-3xl bg-opacity-80 shadow-md ">
                     <span class="material-symbols-outlined text-[140px] flex justify-center mb-16">account_circle</span>
@@ -18,7 +18,7 @@
                 </div>
                 <!-- Tombol untuk menampilkan form -->
                 <a href="javascript:void(0)" onclick="openForm()"
-                    class="flex justify-center items-center bg-orange-500 hover:bg-orange-600 hover:text-gray-100 hover:shadow-sm w-[230px] h-[40px] font-bold rounded-full shadow-md">
+                    class="flex justify-center items-center bg-blue-500 hover:bg-blue-600 hover:text-gray-100 hover:shadow-sm w-[230px] h-[40px] font-bold rounded-full shadow-md">
                     UBAH DATA
                 </a>
             </div>
@@ -42,14 +42,14 @@
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium mb-2">Nama</label>
                         <input type="text" id="name" name="name" value="{{ $user->username }}"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-orange-300">
+                            class="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
                     </div>
 
                     <!-- Input Email -->
                     <div class="mb-4">
                         <label for="email" class="block text-sm font-medium mb-2">Email</label>
                         <input type="text" id="email" name="email" value="{{ $user->email }}"
-                            class="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-orange-300">
+                            class="w-full px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
                     </div>
 
                     <!-- Form Ganti Kata Sandi -->
@@ -74,7 +74,7 @@
 
                     <!-- Tombol Simpan -->
                     <button type="submit"
-                        class="w-full py-2 bg-orange-500 text-white rounded-lg font-bold hover:bg-orange-600">
+                        class="w-full py-2 bg-blue-500 text-white rounded-lg font-bold hover:bg-blue-600">
                         Simpan Perubahan
                     </button>
                 </form>

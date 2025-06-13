@@ -38,16 +38,16 @@
     <div class="overflow-hidden rounded-lg">
       <table class="table-auto w-full border-collapse">
         <thead>
-          <tr class="bg-orange-300 text-black">
+          <tr class="bg-blue-300 text-black">
             <th class="py-3 font-bold text-center rounded-tl-lg">No</th>
             <th class="px-2 py-3 font-bold text-left">Nama Barang</th>
             <th class="py-3 font-bold text-center">Jumlah</th>
             <th class="px-2 py-3 font-bold text-center">Lokasi</th>
             <th class="px-2 py-3 font-bold text-center rounded-tr-lg">Kode RFID</th> </tr>
         </thead>
-        <tbody class="bg-orange-50">
+        <tbody class="bg-blue-50">
           @foreach ($data as $index => $barang)
-          <tr class="hover:bg-orange-100 transition duration-200">
+          <tr class="hover:bg-blue-100 transition duration-200">
             <td class="py-3 border-t border-gray-300 text-center">{{ $index + 1 }}</td>
             <td class="px-2 py-3 border-t text-left border-gray-300">{{ $barang->nama_barang }}</td>
             <td class="py-3 border-t border-gray-300 text-center">{{ $barang->jumlah }}</td>

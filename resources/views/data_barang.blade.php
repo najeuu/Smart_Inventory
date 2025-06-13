@@ -15,7 +15,7 @@
 
             <!-- Tombol Tambah Data Barang -->
             <a href="javascript:void(0)" onclick="openForm()"
-                class="bg-orange-300 hover:bg-orange-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
+                class="bg-blue-300 hover:bg-blue-600 text-white flex items-center justify-center h-[40px] w-[200px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
                 <span class="material-symbols-outlined text-[20px] mr-1">add</span>
                 <p class="text-[15px]">Tambah Data Barang</p>
             </a>
@@ -34,7 +34,7 @@
             <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
                 <table class="table-auto w-full border-collapse">
                     <thead>
-                        <tr class="bg-orange-300 text-black">
+                        <tr class="bg-blue-300 text-black">
                             <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
                             <th class="py-3 px-4 font-bold text-left">Nama Barang</th>
                             <th class="py-3 px-4 font-bold text-center">Jumlah</th>

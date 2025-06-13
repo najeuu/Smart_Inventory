@@ -12,7 +12,7 @@
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
             <table class="table-auto w-full border-collapse">
                 <thead>
-                    <tr class="bg-orange-300 text-black">
+                    <tr class="bg-blue-300 text-black">
                         <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
                         <th class="py-3 px-4 font-bold text-left">Nama Mahasiswa</th>
                         <th class="py-3 px-4 font-bold text-center">NIM</th>

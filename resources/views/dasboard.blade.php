@@ -12,7 +12,7 @@
 
         <div class="grid grid-cols-2 gap-[70px]">
             <!-- Barang Tersedia -->
-            <div class="w-[350px] h-[150px] bg-orange-300 flex items-center pl-8 rounded-lg shadow-lg">
+            <div class="w-[350px] h-[150px] bg-blue-300 flex items-center pl-8 rounded-lg shadow-lg">
                 <span class="material-symbols-outlined text-6xl mr-4">domain_verification</span>
                 <div>
                     <p class="font-bold">Barang Tersedia</p>
@@ -22,7 +22,7 @@
             </div>
 
             <!-- Barang Hampir Habis -->
-            <div class="w-[350px] h-[150px] bg-orange-300 flex items-center pl-8 rounded-lg shadow-lg">
+            <div class="w-[350px] h-[150px] bg-blue-300 flex items-center pl-8 rounded-lg shadow-lg">
                 <span class="material-symbols-outlined text-6xl mr-4">problem</span>
                 <div>
                     <p class="font-bold text-black">Barang Hampir Habis</p>
@@ -37,7 +37,7 @@
             </div>
 
             <!-- Laporan Barang -->
-            <div class="w-[350px] h-[150px] bg-orange-300 flex items-center pl-8 rounded-lg shadow-lg">
+            <div class="w-[350px] h-[150px] bg-blue-300 flex items-center pl-8 rounded-lg shadow-lg">
                 <span class="material-symbols-outlined text-6xl mr-4">event_upcoming</span>
                 <div>
                     <p class="font-bold">Laporan Barang</p>
@@ -46,7 +46,7 @@
             </div>
 
             <!-- Barang Dipinjam -->
-            <div class="w-[350px] h-[150px] bg-orange-300 flex items-center pl-8 rounded-lg shadow-lg">
+            <div class="w-[350px] h-[150px] bg-blue-300 flex items-center pl-8 rounded-lg shadow-lg">
                 <span class="material-symbols-outlined text-6xl mr-4">open_in_browser</span>
                 <div>
                     <p class="font-bold">Barang Dipinjam</p>
