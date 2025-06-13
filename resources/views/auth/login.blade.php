@@ -37,18 +37,11 @@
                 </div>
             @endif
 
-            <!-- Email Field -->
-            <div class="mb-6">
-                <label for="username" class="block text-base font-medium text-gray-600 mb-3">Nama Pengguna</label>
-                <div class="relative">
-                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
-                        </svg>
-                    </div>
-                    <input type="text" name="username" id="username" required value="{{ old('username') }}"
-                        class="block w-full pl-12 pr-4 py-4 text-base text-gray-900 bg-gray-100 border-0 rounded-xl focus:ring-0 focus:outline-none transition-all duration-200">
-                </div>
+            <!-- Username -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
+                <input type="text" name="username" id="username" required value="{{ old('username') }}"
+                    class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
                 @error('username')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
