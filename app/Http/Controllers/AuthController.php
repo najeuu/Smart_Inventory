@@ -1,12 +1,10 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
@@ -18,7 +16,7 @@ class AuthController extends Controller
             'password' => 'required|string|min:8|confirmed',
         ]);
 
-        // Simpan pengguna baru
+        // Simpan pengguna baru dengan default role 'pengguna'
         User::create([
             'username' => $request->username,
             'email' => $request->email,
@@ -27,6 +25,7 @@ class AuthController extends Controller
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan masuk');
     }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -34,19 +33,23 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        $user = User::where('username', $request->username)->first();
+    if (Auth::attempt(['username' => $request->username, 'password' => $request->password])) {
+    $request->session()->regenerate();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return redirect()->back()->with('error', 'Nama pengguna atau kata sandi salah')->withInput();
-        }
-
-        Auth::login($user);
+    $user = Auth::user();
+    if ($user->role === 'admin') {
         return redirect()->route('dasboard');
+    } else {
+        return redirect()->route('dashboard_pengguna');
+    }
+}
+
+return redirect()->back()->with('error', 'Nama pengguna atau kata sandi salah')->withInput();
     }
 
     public function logout(Request $request)
     {
-        auth()->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
