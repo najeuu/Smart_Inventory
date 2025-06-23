@@ -11,7 +11,7 @@
         </div>
 
         <nav class="flex-1 w-full font-bold space-y-2">
-            <a href="{{ route('dasboard') }}" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
+            <a href="{{ route('dashboard_pengguna') }}" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">dashboard</span>
                 Beranda
             </a>
@@ -19,25 +19,13 @@
                 <span class="material-icons mr-4">inventory</span>
                 Data Barang
             </a>
-            <a href="/lokasi" id="lokasi" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">location_on</span>
-                Lokasi
-            </a>
             <a href="/peminjaman" id="peminjaman" class="flex items-center px-4 py-1  text-black hover:bg-blue-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">shopping_cart</span>
                 Peminjaman
             </a>
-            <a href="/pengembalian" id="pengembalian" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">undo</span>
-                Pengembalian
-            </a>
             <a href="/riwayat" id="riwayat" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
                 <span class="material-icons mr-4">history</span>
                 Riwayat
-            </a>
-            <a href="/laporan" id="laporan" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">description</span>
-                Laporan
             </a>
         </nav>
 

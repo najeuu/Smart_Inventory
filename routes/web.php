@@ -10,6 +10,8 @@ use App\Http\Controllers\DasboardController;
 use App\Http\Controllers\DataBarangController;
 use App\Http\Controllers\LokasiController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\DashboardPenggunaController;
+use App\Http\Controllers\KategoriAlatController;
 
 
 // login
@@ -27,10 +29,16 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 //logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//Dasboard
-Route::get('/dasboard', [DasboardController::class, 'index'])->name('dasboard')->middleware('auth');
-Route::get('/dashboard/almost-out-items', [DasboardController::class, 'getAlmostOutItems']);
+//Dasboard admin
+Route::middleware('auth')->group(function () {
+Route::get('/dasboard-admin', [DasboardController::class, 'index'])->name('dasboard');
+Route::get('/dasboard/almost-out-items', [DasboardController::class, 'getAlmostOutItems']);
+});
 
+//Dashboard pengguna
+Route::middleware('auth')->group(function () {
+    Route::get('/dashboard_pengguna', [DashboardPenggunaController::class, 'index'])->name('dashboard_pengguna');
+});
 //Data barang
 Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');
 Route::post('/data_barang', [DataBarangController::class, 'store'])->name('barang.store');
