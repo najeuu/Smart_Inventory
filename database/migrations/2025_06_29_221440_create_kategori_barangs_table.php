@@ -9,12 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-    $table->string('role')->default('pengguna')->after('password');
+        Schema::create('kategori_barangs', function (Blueprint $table) {
+            $table->id();
+            $table->string('nama_kategori');
+            $table->timestamps();
         });
-
     }
 
     /**
@@ -22,8 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('kategori_barangs');
     }
 };

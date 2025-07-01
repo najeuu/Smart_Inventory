@@ -2,7 +2,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('partials.head')
     <style>
-        #data_barang {
+        #databarang-pengguna {
             background: white
         }
     </style>
@@ -11,7 +11,7 @@
 <body class="bg-gray-100">
     <div class="flex w-full">
         <!-- Sidebar -->
-        @include('partials.sidebar')
+        @include('partials.sidebar_pengguna')
 
         <!-- Konten Utama -->
         <main class="flex-1 p-8">
@@ -19,7 +19,6 @@
         </main>
     </div>
     <script src="{{ asset('js/rfid-scanner-laravel.js') }}"></script>
-    @stack('scripts')
 </body>
 
 </html>

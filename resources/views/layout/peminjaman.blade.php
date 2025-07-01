@@ -10,7 +10,7 @@
 <body class="bg-gray-100 overflow-hidden">
     <div class="flex w-full">
         <!-- Sidebar -->
-        @include('partials.sidebar')
+        @include('partials.sidebar_pengguna')
 
         <!-- Konten Utama -->
         <main class="flex-1 p-8">

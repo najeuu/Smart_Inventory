@@ -12,7 +12,7 @@
     <div class="flex">
         <!-- Sidebar -->
         <div class="min-h-screen h-full">
-            @include('partials.sidebar')
+            @include('partials.sidebar_pengguna')
         </div>
         <!-- Konten Utama -->
         <main class="flex-1 p-8">

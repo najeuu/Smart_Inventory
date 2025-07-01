@@ -9,8 +9,7 @@ class RiwayatController extends Controller
 {
     public function index()
     {
-        $riwayat = Peminjaman::with('pengembalian')->get();
-
+        $riwayat = Peminjaman::with(['barang', 'pengembalian'])->get();
         return view('riwayat', compact('riwayat'));
     }
 }

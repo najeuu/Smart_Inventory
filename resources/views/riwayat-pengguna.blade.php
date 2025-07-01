@@ -1,4 +1,4 @@
-@extends('layout.riwayat')
+@extends('layout.riwayat-pengguna')
 
 @section('title', 'Riwayat')
 
@@ -7,30 +7,25 @@
     <!-- Konten -->
     <div class="w-full p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
-        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Riwayat</p>
+        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Riwayat Peminjaman</p>
 
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
             <table class="table-auto w-full border-collapse">
                 <thead>
                     <tr class="bg-blue-300 text-black">
                         <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
-                        <th class="py-3 px-4 font-bold text-left">Nama Mahasiswa</th>
+                        <th class="py-3 px-4 font-bold text-left">Nama</th>
                         <th class="py-3 px-4 font-bold text-center">NIM</th>
-                        <th class="py-3 px-4 font-bold text-center">Nama Barang</th>
-                        <th class="py-3 px-4 font-bold text-center">Jumlah</th>
-                        <th class="py-3 px-4 font-bold text-center">Tanggal Pinjam</th>
-                        <th class="py-3 px-4 font-bold text-center">Tanggal Kembali</th>
-                        <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Status</th>
+                        <th class="py-3 px-4 font-bold text-center">Tanggal Peminjaman</th>
+                        <th class="py-3 px-4 font-bold text-center">Tanggal Pengembalian</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @forelse ($riwayat as $index => $data)
+                    @foreach ($riwayat as $index => $data)
                     <tr class="bg-white border-b hover:bg-gray-100">
                         <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
-                        <td class="py-3 px-4">{{ $data->nama_mahasiswa }}</td>
+                        <td class="py-3 px-4 text-left">{{ $data->nama_mahasiswa }}</td>
                         <td class="py-3 px-4 text-center">{{ $data->nim }}</td>
-                        <td class="py-3 px-4 text-center">{{ $data->barang->nama_barang ?? '-' }}</td>
-                        <td class="py-3 px-4 text-center">{{ $data->total_barang }}</td>
                         <td class="py-3 px-4 text-center">{{ \Carbon\Carbon::parse($data->tanggal_peminjaman)->format('d-m-Y') }}</td>
                         <td class="py-3 px-4 text-center">
                             @if ($data->pengembalian && $data->pengembalian->tanggal_pengembalian)
@@ -39,22 +34,11 @@
                                 Belum Dikembalikan
                             @endif
                         </td>
-                        <td class="py-3 px-4 text-center">
-                            @if ($data->pengembalian)
-                                <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">Selesai</span>
-                            @else
-                                <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-sm">Belum</span>
-                            @endif
-                        </td>
                     </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="text-center py-4">Belum ada data riwayat.</td>
-                    </tr>
-                    @endforelse
+                    @endforeach
                 </tbody>
             </table>
         </div>
     </div>
-</div>
+
 @endsection

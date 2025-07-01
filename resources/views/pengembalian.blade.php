@@ -133,15 +133,7 @@
                                 <label class="block text-gray-700 font-medium mb-2">Kode RFID</label>
                                 <div class="flex items-center space-x-2">
                                     <input type="text" id="kodeRFID" name="kode_rfid"
-                                        class="w-full px-3 py-2 border rounded-lg" readonly required />
-                                    <button type="button" id="togglePortBtn"
-                                        class="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-                                        Open Port
-                                    </button>
-                                    <button type="button" id="startScanBtn"
-                                        class="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-lg" disabled>
-                                        Start Scanning
-                                    </button>
+                                        class="w-full px-3 py-2 border rounded-lg bg-gray-100" readonly required />
                                 </div>
                             </div>
                             <div class="mb-4">

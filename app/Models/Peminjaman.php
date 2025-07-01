@@ -15,7 +15,7 @@ class Peminjaman extends Model
         'nama_mahasiswa',
         'nim',
         'jenis_barang',
-        'barang_id', 
+        'barang_id',
         'total_barang',
         'tanggal_peminjaman'
     ];

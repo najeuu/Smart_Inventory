@@ -22,15 +22,10 @@
         <input type="date" name="tanggal_akhir" id="tanggal_akhir" required class="border border-gray-300 rounded-md px-2 py-1">
       </div>
       <div class="flex items-center">
-        <label for="format" class="mr-2 text-gray-700">Pilih Format Laporan:</label>
-        <select name="format" id="format" required class="border border-gray-300 rounded-md px-2 py-1">
-          <option value="">Pilih Format</option>
-          <option value="pdf">PDF</option>
-          <option value="excel">Excel</option>
-        </select>
-        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-md ml-2">
-          <span class="material-symbols-outlined text-white">download</span>
-          Export
+       <label for="format" class="mr-2 text-gray-700">Unduh Laporan:</label>
+        <button type="submit" class="bg-green-500 hover:bg-green-600 text-white px-4 py-1 rounded-md flex items-center gap-1">
+        <span class="material-symbols-outlined">download</span>
+        <span>Export</span>
         </button>
       </div>
     </form>

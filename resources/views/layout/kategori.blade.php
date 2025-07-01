@@ -1,8 +1,8 @@
 <head>
     @include('partials.head')
     <style>
-        #lokasi {
-            background: white;
+        #kategori {
+            background: white
         }
     </style>
 </head>
@@ -12,7 +12,7 @@
         @include('partials.sidebar')
     </aside>
 
-    <!-- Konten utama, bisa di-scroll -->
+    <!-- Konten Utama -->
     <main class="ml-64 p-8 overflow-auto min-h-screen">
         @yield('content')
     </main>

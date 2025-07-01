@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use PDF;
 use App\Models\Barang;
 use App\Models\Lokasi;
-use PDF;
+use Illuminate\Http\Request;
 use App\Exports\BarangExport;
+use App\Models\KategoriBarang;
 use Maatwebsite\Excel\Facades\Excel;
 
 class DataBarangController extends Controller
@@ -37,6 +38,32 @@ class DataBarangController extends Controller
         }
     }
 
+    // Menampilkan halaman data barang untuk admin (tabel)
+    public function showAdmin()
+    {
+        $data = Barang::with('lokasi', 'kategori')->get();
+        $lokasi = Lokasi::all();
+        $kategoris = KategoriBarang::all();
+        return view('data_barang', compact('data', 'lokasi', 'kategoris'));
+    }
+
+
+    // Menampilkan dashboard kategori alat untuk pengguna
+    public function showUser()
+    {
+        $kategoris = KategoriBarang::all();
+        return view('databarang-pengguna', compact('kategoris'));
+    }
+
+    // Menampilkan barang per kategori untuk pengguna
+    public function showByKategori($kategori)
+    {
+        $barangs = Barang::with('kategori')->whereHas('kategori', function ($q) use ($kategori) {
+            $q->where('nama_kategori', $kategori);
+        })->get();
+        return view('pengguna.databarang_per_kategori', compact('barangs', 'kategori'));
+    }
+
     private function getDataForReport(Request $request)
     {
         // Ambil data barang dan filter berdasarkan tanggal jika ada
@@ -62,9 +89,10 @@ class DataBarangController extends Controller
 
     public function show()
     {
-        $data = Barang::get();
+        $data = Barang::with('lokasi', 'kategori')->get();
         $lokasi = Lokasi::all();
-        return view('data_barang', compact('data', 'lokasi'));
+        $kategoris = KategoriBarang::all();
+        return view('data_barang', compact('data', 'lokasi', 'kategoris'));
     }
 
     // Tambahkan method baru di DataBarangController
@@ -78,24 +106,28 @@ class DataBarangController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid',
             'nama_barang' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:1',
-            'lokasi_id' => 'required|exists:lokasi,id',
+            'kategori_id' => 'required|exists:kategoris,id',
+            'lokasi_id' => 'required|exists:lokasis,id',
+            'kode_rfid' => 'required|unique:barangs,kode_rfid',
         ]);
 
-        try {
-            $barang = Barang::create([
-                'nama_barang' => $request->nama_barang,
-                'jumlah' => $request->jumlah,
-                'lokasi_id' => $request->lokasi_id,
-                'kode_rfid' => str_replace(' ', '', $request->kode_rfid),
-            ]);
+        $barang = new Barang();
+        $barang->nama_barang = $request->nama_barang;
+        $barang->jumlah = $request->jumlah;
+        $barang->kategori_id = $request->kategori_id;
+        $barang->lokasi_id = $request->lokasi_id;
+        $barang->deskripsi = $request->deskripsi;
+        $barang->kode_rfid = $request->kode_rfid;
 
-            return redirect()->route('data_barang')->with('success', 'Barang berhasil ditambahkan.');
-        } catch (\Exception $e) {
-            return redirect()->route('data_barang')->with('error', 'Gagal menambahkan barang: ' . $e->getMessage());
+        if ($request->hasFile('gambar')) {
+            $barang->gambar = $request->file('gambar')->store('gambar_barang', 'public');
         }
+
+        $barang->save();
+
+        return redirect()->route('data_barang')->with('success', 'Barang berhasil ditambahkan');
     }
 
     public function update(Request $request, $id)
@@ -104,6 +136,7 @@ class DataBarangController extends Controller
             'nama_barang' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:1',
             'lokasi_id' => 'required|exists:lokasi,id',
+            'kategori_id' => 'required|exists:kategori_barangs,id',
             'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
         ]);
 
@@ -112,6 +145,7 @@ class DataBarangController extends Controller
             'nama_barang' => $request->nama_barang,
             'jumlah' => $request->jumlah,
             'lokasi_id' => $request->lokasi_id,
+            'kategori_id' => $request->kategori_id,
             'kode_rfid' => $request->kode_rfid,
         ]);
 

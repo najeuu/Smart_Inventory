@@ -21,6 +21,7 @@ class AuthController extends Controller
             'username' => $request->username,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => 'pengguna',
         ]);
 
         return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan masuk');

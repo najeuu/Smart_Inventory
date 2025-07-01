@@ -1,17 +1,20 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\PeminjamanController;
-use App\Http\Controllers\PengembalianController;
-use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\DasboardController;
-use App\Http\Controllers\DataBarangController;
 use App\Http\Controllers\LokasiController;
+use App\Http\Controllers\RiwayatController;
 use App\Http\Controllers\SettingController;
-use App\Http\Controllers\DashboardPenggunaController;
+use App\Http\Controllers\DasboardController;
+use App\Http\Controllers\RegisterController;
+use App\Http\Controllers\DataBarangController;
+use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\KategoriAlatController;
+use App\Http\Controllers\PengembalianController;
+use App\Http\Controllers\KategoriBarangController;
+use App\Http\Controllers\KelolaPenggunaController;
+use App\Http\Controllers\DashboardPenggunaController;
+use App\Http\Controllers\DataBarangPenggunaController;
 
 
 // login
@@ -39,14 +42,19 @@ Route::get('/dasboard/almost-out-items', [DasboardController::class, 'getAlmostO
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard_pengguna', [DashboardPenggunaController::class, 'index'])->name('dashboard_pengguna');
 });
-//Data barang
-Route::get('/data_barang', [DataBarangController::class, 'show'])->name('data_barang');
+//Data barang Admin
+Route::get('/data_barang', [DataBarangController::class, 'showAdmin'])->name('data_barang');
+
+// Data Barang Pengguna
+Route::get('/databarang-pengguna', [DataBarangController::class, 'showUser'])->name('pengguna.data_barang');
+Route::get('/databarang-pengguna/kategori/{kategori}', [DataBarangController::class, 'showByKategori'])->name('pengguna.data_barang.kategori');
 Route::post('/data_barang', [DataBarangController::class, 'store'])->name('barang.store');
 Route::put('/data_barang/{id}', [DataBarangController::class, 'update'])->name('barang.update');
 Route::delete('/data_barang/{id}', [DataBarangController::class, 'destroy'])->name('barang.destroy');
 Route::post('/api/save-rfid-tag', [DataBarangController::class, 'saveRfidTag']);
 Route::get('/api/check-rfid/{kodeRFID}', [DataBarangController::class, 'checkRFIDExists']);
 Route::get('/get-barang-rfid/{kodeRFID}', [DataBarangController::class, 'getBarangByRFID']);
+Route::get('/check-rfid/{kodeRFID}', [DataBarangController::class, 'checkRFIDExists']);
 
 // Peminjaman
 Route::get('/peminjaman', [PeminjamanController::class, 'show'])->name('peminjaman');
@@ -62,11 +70,22 @@ Route::get('/api/check-registered-rfid/{kodeRFID}', 'PengembalianController@chec
 Route::get('/riwayat', [RiwayatController::class, 'index']);
 Route::get('/riwayat/{id}', [RiwayatController::class, 'show']);
 
+//kelola pengguna
+Route::get('/kelolapengguna', [KelolaPenggunaController::class, 'index'])->name('kelolapengguna.index');
+Route::put('/kelola-pengguna/{id}', [KelolaPenggunaController::class, 'update'])->name('kelolapengguna.update');
+Route::delete('/kelola-pengguna/{id}', [KelolaPenggunaController::class, 'destroy'])->name('kelolapengguna.destroy');
+
 //lokasi
 Route::get('/lokasi', [LokasiController::class, 'show'])->name('lokasi');
 Route::post('/lokasi', [LokasiController::class, 'store'])->name('lokasi.store');
 Route::put('/lokasi/{id}', [LokasiController::class, 'update'])->name('lokasi.update');
 Route::delete('/lokasi/{id}', [LokasiController::class, 'destroy'])->name('lokasi.destroy');
+
+//kategori
+Route::get('/kategori', [KategoriBarangController::class, 'index'])->name('kategori.index');
+Route::post('/kategori', [KategoriBarangController::class, 'store'])->name('kategori.store');
+Route::put('/kategori/{id}', [KategoriBarangController::class, 'update'])->name('kategori.update');
+Route::delete('/kategori/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori.destroy');
 
 //laporan
 Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');

@@ -26,7 +26,7 @@
     <!-- Login Card -->
     <div class="relative z-10 bg-white bg-opacity-90 rounded-xl shadow-lg w-11/12 max-w-sm p-8">
         <h1 class="text-2xl font-bold text-center mb-8 text-gray-800">Masuk Akun</h1>
-        
+
         <form action="{{ route('login.post') }}" method="POST" class="space-y-4">
             @csrf
 
@@ -38,10 +38,19 @@
             @endif
 
             <!-- Username -->
-            <div>
-                <label for="username" class="block text-sm font-medium text-gray-700">Nama Pengguna</label>
-                <input type="text" name="username" id="username" required value="{{ old('username') }}"
-                    class="block w-full px-4 py-2 mt-1 text-gray-900 bg-gray-100 border border-gray-300 rounded-lg focus:ring focus:ring-yellow-500 focus:outline-none">
+            <div class="mb-5">
+                <label for="username" class="block text-base font-medium text-gray-600 mb-3">Nama Pengguna</label>
+                <div class="relative">
+                    <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                        <!-- Ikon User -->
+                        <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                        </svg>
+                    </div>
+                    <input type="text" name="username" id="username" required value="{{ old('username') }}"
+                        class="block w-full pl-12 pr-4 py-3 text-base text-gray-900 bg-gray-100 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-400 focus:outline-none transition-all duration-200">
+                </div>
                 @error('username')
                     <span class="text-red-500 text-sm mt-1">{{ $message }}</span>
                 @enderror
@@ -83,7 +92,7 @@
 
             <!-- Registration Link -->
             <div class="text-center text-sm text-gray-600 mt-4">
-                Belum Mendaftar? 
+                Belum Mendaftar?
                 <a href="{{ route('register') }}" class="text-blue-600 font-medium hover:underline ml-1">
                     Daftar
                 </a>

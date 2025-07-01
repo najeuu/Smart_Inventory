@@ -14,6 +14,9 @@ class Barang extends Model
     protected $fillable = [
         'nama_barang',
         'jumlah',
+        'kategori_id',
+        'deskripsi',
+        'gambar',
         'lokasi_id',
         'kode_rfid',
     ];
@@ -40,7 +43,6 @@ class Barang extends Model
         // menambah jumlah barang dr pengembalian
         $this->jumlah += $quantity;
         $this->save();
-
     }
 
     public function lokasi()
@@ -48,4 +50,8 @@ class Barang extends Model
         return $this->belongsTo(Lokasi::class, 'lokasi_id');
     }
 
+    public function kategori()
+    {
+        return $this->belongsTo(KategoriBarang::class, 'kategori_id');
+    }
 }

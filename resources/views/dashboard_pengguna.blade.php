@@ -11,7 +11,7 @@
         <div class="flex justify-between items-center mb-6">
             <h1 class="text-2xl font-bold">Dashboard</h1>
             <div class="text-sm text-gray-700">
-                {{ Auth::user()->username }} 
+                {{ Auth::user()->username }}
                 <i class="fas fa-user ml-2"></i>
             </div>
         </div>
@@ -19,14 +19,14 @@
         <!-- Kategori Alat -->
         <h2 class="text-xl font-semibold mb-4">KATEGORI ALAT</h2>
         <div class="grid grid-cols-2 gap-6">
-            @foreach ($kategori as $item)
+            @foreach 
                 <div class="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
-                    <img src="{{ asset('public/image/' . $item->gambar) }}" alt="{{ $item->nama_kategori }}" class="w-40 h-40 object-contain mb-2">
-                    <p class="font-semibold text-center">{{ $item->nama_kategori }}</p>
+                    <img src="{{ }}" alt="{{ }}" class="w-40 h-40 object-contain mb-2">
+                    <p class="font-semibold text-center">{{ }}</p>
                 </div>
             @endforeach
         </div>
-        
+
     </main>
 </div>
 @endsection

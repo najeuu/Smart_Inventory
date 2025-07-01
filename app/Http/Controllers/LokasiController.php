@@ -11,7 +11,7 @@ class LokasiController extends Controller
     {
         // Mengambil semua data lokasi beserta barang terkait
         $data = Lokasi::with('barang')->get(); // Mengambil data lokasi dan barang yang terkait
-        
+
         // Buat PDF dari view
         $pdf = PDF::loadView('lokasi_pdf', compact('data'));
 
@@ -20,7 +20,7 @@ class LokasiController extends Controller
     }
     public function show()
     {
-        $data = Lokasi::get();
+        $data = Lokasi::with('barangs')->get();
         return view('lokasi', compact('data'));
     }
 
