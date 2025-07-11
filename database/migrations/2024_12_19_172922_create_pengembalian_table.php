@@ -10,11 +10,13 @@ class CreatePengembalianTable extends Migration
     {
         Schema::create('pengembalian', function (Blueprint $table) {
             $table->id();
-            $table->string('nim'); 
+            $table->string('nim');
             $table->string('jenis_barang');
-            $table->foreignId('peminjaman_id')->constrained('peminjaman', 'id'); // menghubungkanke ke tabel peminjaman
-            $table->integer('jumlah'); 
-            $table->timestamp('tanggal_pengembalian')->useCurrent(); 
+            $table->foreignId('peminjaman_id')
+                ->constrained('peminjaman', 'id')
+                ->onDelete('cascade');
+            $table->integer('jumlah');
+            $table->timestamp('tanggal_pengembalian')->useCurrent();
             $table->timestamps();
         });
     }

@@ -7,13 +7,23 @@
     </style>
 </head>
 
-<body class="bg-gray-100 min-h-screen">
-    <aside class="fixed top-0 left-0 h-full w-64 bg-white shadow-md z-40">
+<body class="bg-gray-100 font-poppins overflow-x-hidden">
+    <div class="flex h-screen">
+        <!-- Sidebar -->
         @include('partials.sidebar')
-    </aside>
 
-    <!-- Konten utama, bisa di-scroll -->
-    <main class="ml-64 p-8 overflow-auto min-h-screen">
-        @yield('content')
-    </main>
+        <!-- Main Content -->
+        <div class="flex-1 flex flex-col h-screen">
+            <!-- Header -->
+            @include('partials.header')
+
+            <!-- Konten -->
+            <main class="flex-1 overflow-y-auto p-8">
+                <div class="max-w-7xl mx-auto">
+                    @yield('content')
+                </div>
+            </main>
+        </div>
+    </div>
 </body>
+</html>

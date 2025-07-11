@@ -87,9 +87,11 @@ Route::post('/kategori', [KategoriBarangController::class, 'store'])->name('kate
 Route::put('/kategori/{id}', [KategoriBarangController::class, 'update'])->name('kategori.update');
 Route::delete('/kategori/{id}', [KategoriBarangController::class, 'destroy'])->name('kategori.destroy');
 
-//laporan
+// Tampilkan halaman laporan
 Route::get('/laporan', [DataBarangController::class, 'index'])->name('laporan');
-Route::get('/laporan/download/{format?}', [DataBarangController::class, 'downloadLaporan'])->name('laporan.download');
+
+// Download laporan dalam format PDF (hanya PDF, tanpa parameter format)
+Route::get('/laporan/download', [DataBarangController::class, 'downloadLaporan'])->name('laporan.download');
 
 //setting
 Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');

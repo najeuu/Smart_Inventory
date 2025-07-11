@@ -5,8 +5,7 @@
 @section('content')
 <!-- Main content -->
     <div class="w-full p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
-        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Data Kategori</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">KATEGORI</h1>
         <!-- Tombol Tambah Kategori -->
         <a href="javascript:void(0)" onclick="openForm()" class="bg-blue-300 hover:bg-blue-600 text-white flex items-center justify-center h-[40px] w-[170px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
             <span class="material-symbols-outlined text-[20px] mr-1">add</span>

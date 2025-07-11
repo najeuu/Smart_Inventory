@@ -1,4 +1,4 @@
-@extends('partials.head') {{-- Menggunakan layout/head utama --}}
+@extends('partials.head')
 
 @section('content')
 <div class="flex min-h-screen bg-gray-100">
@@ -19,7 +19,7 @@
         <!-- Kategori Alat -->
         <h2 class="text-xl font-semibold mb-4">KATEGORI ALAT</h2>
         <div class="grid grid-cols-2 gap-6">
-            @foreach 
+            @foreach
                 <div class="bg-white shadow-md rounded-lg p-4 flex flex-col items-center">
                     <img src="{{ }}" alt="{{ }}" class="w-40 h-40 object-contain mb-2">
                     <p class="font-semibold text-center">{{ }}</p>

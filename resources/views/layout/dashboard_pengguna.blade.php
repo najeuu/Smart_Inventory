@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    @include('partials.head') {{-- Include head dengan meta, CSS, dsb --}}
+    @include('partials.head') 
     <style>
         #dashboard {
             background: white;

@@ -5,8 +5,7 @@
 @section('content')
 <div class="bg-gray-100 font-poppins leading-normal tracking-normal">
     <div class="w-full p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4 tracking-widest">HALO LABORAN</h1>
-        <p class="text-gray-600 mb-8 tracking-wide">Selamat Datang di Halaman Kelola Pengguna</p>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">KELOLA PENGGUNA</h1>
 
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
             <table class="table-auto w-full border-collapse">

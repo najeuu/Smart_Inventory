@@ -9,13 +9,17 @@ use Illuminate\Http\Request;
 use App\Exports\BarangExport;
 use App\Models\KategoriBarang;
 use Maatwebsite\Excel\Facades\Excel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
+use App\Models\Peminjaman;
 
 class DataBarangController extends Controller
 {
     public function index()
     {
         // Mengambil semua data barang dari model Barang
-        $data = Barang::with('lokasi')->paginate(10);
+        $data = Barang::with('lokasi', 'kategori')->orderBy('created_at', 'desc')->get();
 
         // Mengirim data ke view 'laporan'
         return view('laporan', compact('data'));
@@ -23,25 +27,22 @@ class DataBarangController extends Controller
 
     public function downloadLaporan(Request $request)
     {
-        $data = $this->getDataForReport($request);
+        $data = Barang::with('lokasi')->orderBy('created_at', 'desc')->get();
 
-        // Validasi format laporan
-        if ($request->format === 'pdf') {
-            // Mengunduh PDF
-            return PDF::loadView('pdf.laporan_barang', compact('data'))->download('laporan_barang.pdf');
-        } elseif ($request->format === 'excel') {
-            // Mengunduh Excel
-            return Excel::download(new BarangExport($data), 'laporan_barang.xlsx');
-        } else {
-            // Kembali jika format tidak valid
-            return back()->with('error', 'Pilih format laporan');
-        }
+        $tanggalUnduh = now()->format('d-m-Y');
+        $user = auth()->user();
+
+        return PDF::loadView('pdf.laporan_barang', [
+            'data' => $data,
+            'tanggalUnduh' => $tanggalUnduh,
+            'user' => $user
+        ])->download('laporan_barang.pdf');
     }
 
     // Menampilkan halaman data barang untuk admin (tabel)
     public function showAdmin()
     {
-        $data = Barang::with('lokasi', 'kategori')->get();
+        $data = Barang::with('lokasi', 'kategori')->paginate(10);;
         $lokasi = Lokasi::all();
         $kategoris = KategoriBarang::all();
         return view('data_barang', compact('data', 'lokasi', 'kategoris'));
@@ -62,29 +63,6 @@ class DataBarangController extends Controller
             $q->where('nama_kategori', $kategori);
         })->get();
         return view('pengguna.databarang_per_kategori', compact('barangs', 'kategori'));
-    }
-
-    private function getDataForReport(Request $request)
-    {
-        // Ambil data barang dan filter berdasarkan tanggal jika ada
-        $data = Barang::with('lokasi');
-
-        if ($this->validateDateRange($request->tanggal_awal, $request->tanggal_akhir)) {
-            $data = $data->whereBetween('created_at', [$request->tanggal_awal, $request->tanggal_akhir]);
-        }
-
-        return $data->get();
-    }
-
-    private function validateDateRange($startDate, $endDate)
-    {
-        if (!empty($startDate) && !empty($endDate)) {
-            if (strtotime($startDate) > strtotime($endDate)) {
-                return back()->with('error', 'Rentang tanggal tidak valid. Tanggal akhir harus setelah tanggal awal.');
-            }
-            return true;
-        }
-        return true; // Jika tidak ada tanggal, tampilkan semua data
     }
 
     public function show()
@@ -108,10 +86,16 @@ class DataBarangController extends Controller
         $request->validate([
             'nama_barang' => 'required|string|max:255',
             'jumlah' => 'required|integer|min:1',
-            'kategori_id' => 'required|exists:kategoris,id',
-            'lokasi_id' => 'required|exists:lokasis,id',
-            'kode_rfid' => 'required|unique:barangs,kode_rfid',
+            'kategori_id' => 'required|exists:kategori_barangs,id',
+            'lokasi_id' => 'required|exists:lokasi,id',
+            'kode_rfid' => 'required|string|max:255',
         ]);
+
+        // Validasi RFID manual
+        if (Barang::where('kode_rfid', $request->kode_rfid)->exists()) {
+            return redirect()->route('data_barang')
+                ->with('kode_rfid_terdaftar', 'Kode RFID telah didaftarkan. Silahkan coba kode yang lain.');
+        }
 
         $barang = new Barang();
         $barang->nama_barang = $request->nama_barang;
@@ -138,16 +122,34 @@ class DataBarangController extends Controller
             'lokasi_id' => 'required|exists:lokasi,id',
             'kategori_id' => 'required|exists:kategori_barangs,id',
             'kode_rfid' => 'required|string|max:255|unique:barangs,kode_rfid,' . $id,
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ], [
+            'kode_rfid.unique' => 'Kode RFID telah didaftarkan. Silahkan coba kode yang lain.',
         ]);
 
         $barang = Barang::findOrFail($id);
-        $barang->update([
-            'nama_barang' => $request->nama_barang,
-            'jumlah' => $request->jumlah,
-            'lokasi_id' => $request->lokasi_id,
-            'kategori_id' => $request->kategori_id,
-            'kode_rfid' => $request->kode_rfid,
-        ]);
+
+        // Update data
+        $barang->nama_barang = $request->nama_barang;
+        $barang->jumlah = $request->jumlah;
+        $barang->lokasi_id = $request->lokasi_id;
+        $barang->kategori_id = $request->kategori_id;
+        $barang->kode_rfid = $request->kode_rfid;
+        $barang->deskripsi = $request->deskripsi;
+
+        // Jika ada gambar baru di-upload
+        if ($request->hasFile('gambar')) {
+            // Hapus gambar lama jika ada
+            if ($barang->gambar && Storage::disk('public')->exists($barang->gambar)) {
+                Storage::disk('public')->delete($barang->gambar);
+            }
+
+            // Simpan gambar baru
+            $barang->gambar = $request->file('gambar')->store('gambar_barang', 'public');
+        }
+
+        // Simpan perubahan
+        $barang->save();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil diperbarui.');
     }
@@ -156,14 +158,33 @@ class DataBarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
 
-        // Cek apakah barang sedang dipinjam
-        if ($barang->peminjaman()->exists()) {
-            return redirect()->route('data_barang')->with('error', 'Barang sedang dipinjam, tidak dapat dihapus.');
+        // Cari semua peminjaman yang berkaitan dengan barang ini
+        $peminjamans = Peminjaman::where('jenis_barang', $barang->nama_barang)->get();
+
+        // Cek apakah masih ada peminjaman yang belum dikembalikan
+        foreach ($peminjamans as $pinjam) {
+            if ($pinjam->pengembalian === null) {
+                return redirect()->route('data_barang')
+                    ->with('error', 'Barang masih dipinjam dan belum dikembalikan, tidak bisa dihapus.');
+            }
         }
 
-        $barang->delete();
+        // Jika semua sudah dikembalikan, hapus pengembalian dulu
+        foreach ($peminjamans as $pinjam) {
+            if ($pinjam->pengembalian) {
+                $pinjam->pengembalian->delete(); // hapus dari tabel pengembalian
+            }
+            $pinjam->delete(); // hapus peminjaman
+        }
 
-        return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus dari sistem.');
+        // Hapus gambar jika ada
+        if ($barang->gambar && \Storage::disk('public')->exists($barang->gambar)) {
+            \Storage::disk('public')->delete($barang->gambar);
+        }
+
+        $barang->delete(); // terakhir hapus barang
+
+        return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus.');
     }
 
     public function saveRfidTag(Request $request)

@@ -1,59 +1,45 @@
-<!--sidebar-->
-<div class="flex bg-gray-100 font-poppins h-screen">
-    <div class="bg-blue-300 w-64 hidden md:flex md:flex-col rounded-tr-3xl rounded-br-3xl custom-shadow z-30">
-        <div class="flex items-center mb-8 space-x-2 mt-4 justify-center">
-            <img src="{{ url('/image/logo.png') }}" alt="Logo" class="h-14 w-14 mr-2">
-            <div class="text-left">
-            <h2 class="text-lg font-bold text-black ">
-                <p class="font-bold text-[20px] tracking-wide">InventoriKu</p>
-            </h2>
-            </div>
+<!-- Sidebar -->
+<div class="bg-blue-300 w-64 h-screen flex flex-col justify-between custom-shadow z-30">
+    <div>
+        <div class="flex items-center justify-center mt-6 mb-4">
+            <img src="{{ url('/image/logo.png') }}" alt="Logo" class="h-16 w-16">
+            <p class="font-bold text-lg ml-2">InventoriKu</p>
         </div>
 
-        <nav class="flex-1 w-full font-bold space-y-2">
-            <a href="{{ route('dasboard') }}" id="dashboard" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">dashboard</span>
-                Beranda
+        <nav class="space-y-2 font-bold px-4">
+            <a href="{{ route('dasboard') }}" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">dashboard</span> Dashboard
             </a>
-            <a href="{{ route('data_barang') }}" id="data_barang" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">inventory</span>
-                Data Barang
+            <a href="{{ route('data_barang') }}" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">inventory</span> Data Barang
             </a>
-            <a href="/lokasi" id="lokasi" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">location_on</span>
-                Lokasi
+            <a href="/lokasi" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">location_on</span> Lokasi
             </a>
-            <a href="/kategori" id="kategori" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">category</span>
-                Kategori
+            <a href="/kategori" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">category</span> Kategori
             </a>
-            <a href="/riwayat" id="riwayat" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">history</span>
-                Riwayat
+            <a href="/riwayat" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">history</span> Riwayat
             </a>
-            <a href="/kelolapengguna" id="kelolapengguna" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">group</span>
-                Kelola Pengguna
+            <a href="/kelolapengguna" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">group</span> Kelola Pengguna
             </a>
-            <a href="/laporan" id="laporan" class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">description</span>
-                Laporan
+            <a href="/laporan" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">description</span> Laporan
             </a>
         </nav>
+    </div>
 
-        <div class="w-full space-y-2 font-bold mb-6">
-            <a href="/setting" id="setting" class="flex items-center px-4 py-1 text-black  hover:bg-blue-400 rounded-r-full mr-4">
-                <span class="material-icons mr-4">settings</span>
-                Pengaturan
-            </a>
-            <form action="{{ route('logout') }}" method="POST" class=" text-black hover:bg-blue-400 rounded-r-full mr-4">
-                @csrf
-                <button type="submit" id="logout"
-                    class="flex items-center px-4 py-1 text-black hover:bg-blue-400 rounded-r-full mr-4">
-                    <span class="material-icons mr-4">logout</span>
-                    Keluar
-                </button>
-            </form>
-        </div>
+    <div class="space-y-2 font-bold px-4 mb-6">
+        <a href="/setting" class="flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+            <span class="material-icons mr-3">settings</span> Pengaturan
+        </a>
+        <form action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="w-full flex items-center py-2 hover:bg-blue-400 rounded-lg px-3">
+                <span class="material-icons mr-3">logout</span> Keluar
+            </button>
+        </form>
     </div>
 </div>
