@@ -12,20 +12,19 @@ class Pengembalian extends Model
     protected $table = 'pengembalian';
 
     protected $fillable = [
-        'nim',
         'peminjaman_id',
-        'jenis_barang',
+        'barang_id',
         'jumlah',
         'tanggal_pengembalian',
     ];
 
-    // relasi dengan Peminjaman
     public function peminjaman()
     {
         return $this->belongsTo(Peminjaman::class, 'peminjaman_id');
     }
-    public function pengembalian()
+
+    public function barang()
     {
-        return $this->hasOne(Pengembalian::class, 'peminjaman_id');
+        return $this->belongsTo(Barang::class, 'barang_id');
     }
 }

@@ -1,69 +1,56 @@
 @extends('layout.riwayat')
 
-@section('title', 'Riwayat')
+@section('title', 'Riwayat Admin')
 
 @section('content')
 <div class="bg-gray-100 font-poppins leading-normal tracking-normal">
-    <!-- Konten -->
     <div class="w-full p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">RIWAYAT</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">RIWAYAT PEMINJAMAN BARANG</h1>
 
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
-            <table class="table-auto w-full border-collapse">
+            <table class="min-w-full bg-white border border-gray-300">
                 <thead>
-                <tr class="bg-blue-300 text-black">
-                    <th class="py-3 px-4 font-bold text-center rounded-tl-lg">No</th>
-                    <th class="py-3 px-4 font-bold text-left">Nama Mahasiswa</th>
-                    <th class="py-3 px-4 font-bold text-center">NIM</th>
-                    <th class="py-3 px-4 font-bold text-center">Nama Barang</th>
-                    <th class="py-3 px-4 font-bold text-center">Jumlah</th>
-                    <th class="py-3 px-4 font-bold text-center">Jumlah Tersisa</th>
-                    <th class="py-3 px-4 font-bold text-center">Jumlah Dipinjam</th>
-                    <th class="py-3 px-4 font-bold text-center">Status Barang</th>
-                    <th class="py-3 px-4 font-bold text-center">Tanggal Pinjam</th>
-                    <th class="py-3 px-4 font-bold text-center">Tanggal Kembali</th>
-                    <th class="py-3 px-4 font-bold text-center rounded-tr-lg">Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse ($riwayat as $index => $data)
-                <tr class="bg-white border-b hover:bg-gray-100">
-                    <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
-                    <td class="py-3 px-4">{{ $data->nama_mahasiswa }}</td>
-                    <td class="py-3 px-4 text-center">{{ $data->nim }}</td>
-                    <td class="py-3 px-4 text-center">{{ $data->barang->nama_barang ?? '-' }}</td>
-                    <td class="py-3 px-4 text-center">{{ $data->total_barang }}</td>
-                    <td class="py-3 px-4 text-center">{{ $data->barang->jumlah ?? 0 }}</td>
-                    <td class="py-3 px-4 text-center">{{ $data->barang->peminjaman_count ?? 0 }}</td>
-                    <td class="py-3 px-4 text-center">
-                        @if (($data->barang->peminjaman_count ?? 0) > 0)
-                            <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-sm">Sedang Dipinjam</span>
-                        @else
-                            <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">Tersedia</span>
-                        @endif
-                    </td>
-                    <td class="py-3 px-4 text-center">{{ \Carbon\Carbon::parse($data->tanggal_peminjaman)->format('d-m-Y') }}</td>
-                    <td class="py-3 px-4 text-center">
-                        @if ($data->pengembalian && $data->pengembalian->tanggal_pengembalian)
-                            {{ \Carbon\Carbon::parse($data->pengembalian->tanggal_pengembalian)->format('d-m-Y') }}
-                        @else
-                            Belum Dikembalikan
-                        @endif
-                    </td>
-                    <td class="py-3 px-4 text-center">
-                        @if ($data->pengembalian)
-                            <span class="bg-green-200 text-green-800 px-2 py-1 rounded-full text-sm">Selesai</span>
-                        @else
-                            <span class="bg-red-200 text-red-800 px-2 py-1 rounded-full text-sm">Belum</span>
-                        @endif
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="11" class="text-center py-4">Belum ada data riwayat.</td>
-                </tr>
-                @endforelse
-            </tbody>
+                    <tr class="bg-blue-300 text-black text-center">
+                        <th class="py-3 px-4">No</th>
+                        <th class="py-3 px-4 text-left">Nama Barang</th>
+                        <th class="py-3 px-4">Total Barang</th>
+                        <th class="py-3 px-4">Stok Barang</th>
+                        <th class="py-3 px-4">Barang Dipinjam</th>
+                        <th class="py-3 px-4">Jumlah Transaksi Peminjaman</th>
+                        <th class="py-3 px-4">Jumlah Transaksi Pengembalian</th>
+                        <th class="py-3 px-4">Status Barang</th>
+                        <th class="py-3 px-4">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="text-sm text-gray-700">
+                    @forelse ($riwayat as $index => $item)
+                    <tr class="border-b hover:bg-gray-100 text-center">
+                        <td class="py-2 px-4">{{ $index + 1 }}</td>
+                        <td class="py-2 px-4 text-left font-medium">{{ $item['nama_barang'] }}</td>
+                        <td class="py-2 px-4">{{ $item['total_barang'] }}</td>
+                        <td class="py-2 px-4">{{ $item['stok_barang'] }}</td>
+                        <td class="py-2 px-4">{{ $item['total_dipinjam'] }}</td>
+                        <td class="py-2 px-4">{{ $item['jumlah_transaksi_peminjaman'] }}</td>
+                        <td class="py-2 px-4">{{ $item['jumlah_transaksi_pengembalian'] }}</td>
+                        <td class="py-2 px-4">
+                            @if ($item['total_dipinjam'] > 0 && $item['total_dikembalikan'] < $item['total_dipinjam'])
+                                <span class="text-yellow-600 font-semibold">Sebagian Dikembalikan</span>
+                            @elseif ($item['total_dipinjam'] > 0 && $item['total_dikembalikan'] == 0)
+                                <span class="text-red-600 font-semibold">Sedang Dipinjam</span>
+                            @else
+                                <span class="text-green-600 font-semibold">Tersedia</span>
+                            @endif
+                        </td>
+                        <td class="py-2 px-4">
+                            <a href="{{ route('riwayat.detail', $item['id']) }}" class="text-blue-600 underline">Lihat</a>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-gray-500">Tidak ada data riwayat barang.</td>
+                    </tr>
+                    @endforelse
+                </tbody>
             </table>
         </div>
     </div>

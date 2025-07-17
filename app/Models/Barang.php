@@ -21,13 +21,11 @@ class Barang extends Model
         'kode_rfid',
     ];
 
-    // relasi dengan Peminjaman
     public function peminjaman()
     {
-        return $this->hasMany(Peminjaman::class, 'jenis_barang', 'nama_barang');
+        return $this->hasMany(Peminjaman::class, 'barang_id', 'id');
     }
 
-    // mengurangi jumlah barang dr peminjaman
     public function reduceQuantity($quantity)
     {
         if ($this->jumlah >= $quantity) {
@@ -40,7 +38,6 @@ class Barang extends Model
 
     public function increaseQuantity($quantity)
     {
-        // menambah jumlah barang dr pengembalian
         $this->jumlah += $quantity;
         $this->save();
     }

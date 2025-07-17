@@ -9,28 +9,24 @@ use App\Models\User;
 
 class SettingController extends Controller
 {
-    // Menampilkan halaman setting
     public function index()
     {
         $user = Auth::user();
         return view('setting', ['user' => $user]);
     }
 
-    // Memproses update data
     public function update(Request $request)
     {
         $user = Auth::user();
 
-        // Jika input current_password diisi, maka lakukan pengecekan terlebih dahulu
         if ($request->filled('current_password')) {
             if (!Hash::check($request->current_password, $user->password)) {
                 return back()->withErrors(['current_password' => 'Kata sandi lama salah']);
             }
         }
 
-        // Validasi input (nama, email, password)
         $request->validate([
-            'name' => 'nullable|string|max:255|unique:users,username,' . Auth::id(), // Tambah validasi unique
+            'name' => 'nullable|string|max:255|unique:users,username,' . Auth::id(),
             'email' => 'nullable|email|unique:users,email,' . Auth::id(),
             'new_password' => 'nullable|string|min:8|confirmed',
         ], [
@@ -40,22 +36,52 @@ class SettingController extends Controller
             'new_password.confirmed' => 'Konfirmasi kata sandi tidak sesuai',
         ]);
 
-        // Update nama jika ada input baru
         if ($request->filled('name')) {
             $user->username = $request->name;
         }
 
-        // Update email jika ada input baru
         if ($request->filled('email')) {
             $user->email = $request->email;
         }
 
-        // Update password jika input valid
         if ($request->filled('new_password')) {
             $user->password = Hash::make($request->new_password);
         }
 
-        // Simpan perubahan ke database
+        $user->save();
+
+        return back()->with('success', 'Data berhasil diperbarui!');
+    }
+
+    public function settingPengguna()
+    {
+        $user = Auth::user();
+        return view('setting_pengguna', compact('user'));
+    }
+
+    public function updatePengguna(Request $request)
+    {
+        $user = Auth::user();
+
+        if ($request->filled('current_password') && !Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Kata sandi lama salah']);
+        }
+
+        $request->validate([
+            'nama_mahasiswa' => 'required|string|max:255',
+            'nim' => 'required|string|max:20|unique:users,nim,' . $user->id,
+            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'new_password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $user->nama_mahasiswa = $request->nama_mahasiswa;
+        $user->nim = $request->nim;
+        $user->username = $request->username;
+
+        if ($request->filled('new_password')) {
+            $user->password = Hash::make($request->new_password);
+        }
+
         $user->save();
 
         return back()->with('success', 'Data berhasil diperbarui!');

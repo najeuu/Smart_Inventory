@@ -34,14 +34,16 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 //Dasboard admin
 Route::middleware('auth')->group(function () {
-Route::get('/dasboard-admin', [DasboardController::class, 'index'])->name('dasboard');
-Route::get('/dasboard/almost-out-items', [DasboardController::class, 'getAlmostOutItems']);
+    Route::get('/dasboard-admin', [DasboardController::class, 'index'])->name('dasboard');
+    Route::get('/dasboard/almost-out-items', [DasboardController::class, 'getAlmostOutItems']);
 });
 
 //Dashboard pengguna
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard_pengguna', [DashboardPenggunaController::class, 'index'])->name('dashboard_pengguna');
 });
+Route::get('/dashboard_pengguna/filter', [DashboardPenggunaController::class, 'filter'])->name('dashboard_pengguna.filter');
+
 //Data barang Admin
 Route::get('/data_barang', [DataBarangController::class, 'showAdmin'])->name('data_barang');
 
@@ -59,16 +61,21 @@ Route::get('/check-rfid/{kodeRFID}', [DataBarangController::class, 'checkRFIDExi
 // Peminjaman
 Route::get('/peminjaman', [PeminjamanController::class, 'show'])->name('peminjaman');
 Route::post('/peminjaman/store', [PeminjamanController::class, 'store'])->name('peminjaman.store');
+Route::post('/peminjaman/search-rfid', [PeminjamanController::class, 'searchByRfid'])->name('peminjaman.searchByRfid');
 
 // Pengembalian
-Route::get('/pengembalian', [PengembalianController::class, 'cari']);
-Route::get('/pengembalian/cari', [PengembalianController::class, 'cari'])->name('pengembalian.cari');
-Route::post('/pengembalian/store', [PengembalianController::class, 'store'])->name('pengembalian.store');
-Route::get('/api/check-registered-rfid/{kodeRFID}', 'PengembalianController@checkRegisteredRFID');
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pengembalian', [PengembalianController::class, 'index'])->name('pengembalian.index');
+    Route::post('/pengembalian', [PengembalianController::class, 'store'])->name('pengembalian.store');
+});
 
-//riwayat
-Route::get('/riwayat', [RiwayatController::class, 'index']);
-Route::get('/riwayat/{id}', [RiwayatController::class, 'show']);
+//riwayat admin
+Route::get('/riwayat', [RiwayatController::class, 'index'])->name('riwayat');
+Route::get('/riwayat/{id}', [RiwayatController::class, 'show'])->name('riwayat.detail');
+Route::get('/riwayat-peminjaman', [RiwayatController::class, 'riwayatPinjam'])->name('riwayat.pinjam');
+
+//Riwayat pengguna
+Route::get('/riwayat-pengguna', [PeminjamanController::class, 'riwayatPengguna'])->name('riwayat.pengguna');
 
 //kelola pengguna
 Route::get('/kelolapengguna', [KelolaPenggunaController::class, 'index'])->name('kelolapengguna.index');
@@ -96,6 +103,10 @@ Route::get('/laporan/download', [DataBarangController::class, 'downloadLaporan']
 //setting
 Route::get('/setting', [SettingController::class, 'index'])->name('setting.index');
 Route::post('/setting/update', [SettingController::class, 'update'])->name('setting.update');
+
+//Setting pengguna
+Route::get('/setting/pengguna', [SettingController::class, 'settingPengguna'])->name('setting.pengguna');
+Route::post('/setting/pengguna/update', [SettingController::class, 'updatePengguna'])->name('setting.pengguna.update');
 
 // logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout')->middleware('auth');

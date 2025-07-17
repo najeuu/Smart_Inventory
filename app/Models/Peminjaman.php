@@ -12,27 +12,38 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
 
     protected $fillable = [
-        'nama_mahasiswa',
-        'nim',
-        'jenis_barang',
+        'user_id',
+        'kode_rfid',
         'barang_id',
         'total_barang',
-        'tanggal_peminjaman'
+        'tanggal_peminjaman',
     ];
 
-    // relasi dengan Barang
     public function barang()
     {
-        return $this->belongsTo(Barang::class, 'jenis_barang', 'nama_barang');
-    }
-    public function barangPinjam()
-    {
-        return $this->hasMany(Barang::class, 'peminjaman_id');
+        return $this->belongsTo(Barang::class, 'barang_id', 'id');
     }
 
-    // relasi dengan Pengembalian
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
     public function pengembalian()
     {
         return $this->hasOne(Pengembalian::class, 'peminjaman_id');
+    }
+
+    public function pengembalians()
+    {
+        return $this->hasMany(Pengembalian::class, 'peminjaman_id');
+    }
+    public function getJumlahDikembalikanAttribute()
+    {
+        return $this->pengembalians->sum('jumlah');
+    }
+
+    public function getTanggalPengembalianTerakhirAttribute()
+    {
+        return $this->pengembalians->last()?->tanggal_pengembalian;
     }
 }

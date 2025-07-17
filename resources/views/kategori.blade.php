@@ -3,6 +3,21 @@
 @section('title', 'kategori')
 
 @section('content')
+
+@if (session('success'))
+    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold"></strong>
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Gagal</strong>
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+@endif
+
 <!-- Main content -->
     <div class="w-full p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4">KATEGORI</h1>
@@ -23,14 +38,14 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data as $index => $kategori)
+                    @forelse($data as $index => $kategori)
                     <tr class="bg-white border-b hover:bg-gray-100">
                         <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
                         <td class="py-3 px-4 text-center">{{ $kategori->nama_kategori }}</td>
                         <td class="py-2 border-t border-gray-300">
                             <div class="flex items-center justify-center font-semibold h-1 text-center">
                                 <button class="bg-green-400 hover:bg-green-600 mr-2 rounded-md p-1 w-[80px]" onclick="openEditForm('{{ $kategori->nama_kategori }}', '{{ $kategori->id }}')">EDIT</button>
-                                <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" style="display:inline;">
+                                <form action="{{ route('kategori.destroy', $kategori->id) }}" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus kategori ini?')">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit" class="bg-red-400 hover:bg-red-600 rounded-md mt-4 p-1 w-[80px]">HAPUS</button>
@@ -38,12 +53,49 @@
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="3" class="py-4 text-center text-gray-500">
+                            Data kategori belum tersedia. Silakan tambahkan data.
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
     </div>
+    <div class="mt-6 flex justify-center">
+        {{ $data->links() }}
+    </div>
 </div>
+
+
+<!-- Filter & Search -->
+<div class="mb-6">
+    <form method="GET" action="{{ route('kategori.index') }}" class="flex flex-wrap md:flex-nowrap items-center gap-4 w-full border-transparent border p-6">
+        <select name="filter_kategori" class="px-3 py-2 border rounded-lg flex-grow w-full md:w-auto">
+            <option value="">-- Semua Kategori --</option>
+            @foreach ($kategoriList as $item)
+                <option value="{{ $item->id }}" {{ $filterKategori == $item->id ? 'selected' : '' }}>
+                    {{ $item->nama_kategori }}
+                </option>
+            @endforeach
+        </select>
+
+        <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama barang"
+            class="px-3 py-2 border rounded-lg flex-grow w-full md:w-auto" />
+
+        <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full md:w-auto">
+            Filter
+        </button>
+    </form>
+</div>
+
+@if ($noBarangFound)
+    <div class="text-center text-red-500 font-semibold mt-4 mb-6">
+        Tidak ada data yang cocok dengan pencarian anda. Silakan cari data lain.
+    </div>
+@endif
 
 <!-- Daftar Barang Berdasarkan Kategori -->
 @foreach ($data as $kategori)
@@ -88,7 +140,9 @@
             </div>
             <div class="flex justify-end">
                 <button type="button" class="bg-red-500 text-white px-4 py-2 rounded-lg mr-2" onclick="closeForm()">Batal</button>
-                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg">Simpan</button>
+                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-lg" onclick="console.log('Form disubmit')">
+                    Simpan
+                </button>
             </div>
         </form>
     </div>

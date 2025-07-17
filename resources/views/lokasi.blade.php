@@ -3,15 +3,30 @@
 @section('title', 'lokasi')
 
 @section('content')
+
+@if (session('success'))
+    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold"></strong>
+        <span class="block sm:inline">{{ session('success') }}</span>
+    </div>
+@endif
+
+@if (session('error'))
+    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+        <strong class="font-bold">Gagal</strong>
+        <span class="block sm:inline">{{ session('error') }}</span>
+    </div>
+@endif
+
 <div class="min-h-screen overflow-y-auto bg-gray-100 font-poppins leading-normal tracking-normal">
     <!-- Main content -->
     <div class="w-full p-8">
         <h1 class="text-3xl font-bold text-gray-800 mb-4">LOKASI</h1>
 
         <!-- Tombol Tambah Data lokasi -->
-        <a href="javascript:void(0)" onclick="openForm()" class="bg-blue-300 hover:bg-blue-600 text-white flex items-center justify-center h-[40px] w-[170px] font-bold rounded-lg mb-4 shadow-md transition duration-300">
-            <span class="material-symbols-outlined text-[20px] mr-1">add</span>
-            <p class="text-[15px]">Tambah Lokasi</p>
+        <a href="javascript:void(0)" onclick="openForm()" class="bg-blue-300 hover:bg-blue-500 text-white flex items-center justify-center h-10 w-44 font-semibold rounded-lg mb-4 shadow transition duration-300">
+            <span class="material-symbols-outlined text-base mr-2">add</span>
+            <span>Tambah Lokasi</span>
         </a>
 
         <!-- Tabel Daftar lokasi -->
@@ -25,7 +40,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach($data as $index => $lokasi)
+                    @forelse($data as $index => $lokasi)
                     <tr class="bg-white border-b hover:bg-gray-100">
                         <td class="py-3 px-4 text-center">{{ $index + 1 }}</td>
                         <td class="py-3 px-4 text-center">{{ $lokasi->lokasi }}</td>
@@ -35,17 +50,55 @@
                                 <form action="{{ route('lokasi.destroy', $lokasi->id) }}" method="POST" style="display:inline;">
                                     @csrf
                                     @method('DELETE')
-                                    <button type="submit" class="bg-red-400 hover:bg-red-600 rounded-md mt-4 p-1 w-[80px]">HAPUS</button>
+                                    <button type="submit" onclick="return confirm('Yakin ingin menghapus lokasi ini?')" class="bg-red-400 hover:bg-red-600 rounded-md mt-4 p-1 w-[80px]">
+                                        HAPUS
+                                    </button>
                                 </form>
                             </div>
                         </td>
                     </tr>
-                    @endforeach
+                    @empty
+                    <tr>
+                        <td colspan="3" class="py-4 text-center text-gray-500">
+                            Data kategori belum tersedia. Silakan tambahkan data.
+                        </td>
+                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
+        <div class="mt-6 flex justify-center">
+            {{ $data->links() }}
+        </div>
+
+        <!-- Filter & Search -->
+        <div class="mb-6">
+            <form method="GET" action="{{ route('lokasi') }}" class="flex flex-wrap md:flex-nowrap items-center gap-4 w-full border-transparent border p-6">
+                <select name="filter_lokasi" class="px-3 py-2 border rounded-lg flex-grow w-full md:w-auto">
+                    <option value="">-- Semua Lokasi --</option>
+                    @foreach ($lokasiList as $lokasiItem)
+                        <option value="{{ $lokasiItem->id }}" {{ $filterLokasi == $lokasiItem->id ? 'selected' : '' }}>
+                            {{ $lokasiItem->lokasi }}
+                        </option>
+                    @endforeach
+                </select>
+
+                <input type="text" name="search" value="{{ $search }}" placeholder="Cari nama barang"
+                    class="px-3 py-2 border rounded-lg flex-grow w-full md:w-auto" />
+
+                <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg w-full md:w-auto">
+                    Filter
+                </button>
+            </form>
+        </div>
 
         <!-- Daftar Barang Berdasarkan Lokasi -->
+        @if ($noBarangFound)
+            <div class="text-center text-red-500 font-semibold mt-4 mb-6">
+                Tidak ada data yang cocok dengan pencarian anda. Silahkan cari data lain
+            </div>
+        @endif
+
         @foreach ($data as $lokasi)
             @if($lokasi->barangs->count() > 0)
             <div class="mb-10">

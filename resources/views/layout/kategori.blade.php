@@ -18,7 +18,7 @@
             @include('partials.header')
 
             <!-- Konten -->
-            <main class="flex-1 p-8 overflow-hidden">
+            <main class="flex-1 p-8 overflow-y-auto scrollbar-hide">
                 <div class="max-w-7xl mx-auto">
                     @yield('content')
                 </div>

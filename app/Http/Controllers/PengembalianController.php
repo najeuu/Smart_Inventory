@@ -10,95 +10,107 @@ use Illuminate\Http\Request;
 
 class PengembalianController extends Controller
 {
-    // method mencari data peminjaman berdasarkan NIM
-    public function cari(Request $request)
+    public function index()
     {
-        $nim = $request->nim;
-
-        // Ambil data peminjaman yang belum dikembalikan
-        $peminjaman = Peminjaman::where('nim', $nim)
-            ->whereDoesntHave('pengembalian') // Pastikan tidak ada pengembalian
+        $peminjaman = Peminjaman::with(['barang', 'pengembalians'])
+            ->where('user_id', auth()->id())
+            ->orderBy('tanggal_peminjaman', 'asc')
             ->get();
 
-        // Map data barang
-        $barangDipinjam = $peminjaman->map(function ($pinjam) {
-            return [
-                'id' => $pinjam->id,
-                'jenis_barang' => $pinjam->jenis_barang,
-                'total_barang' => $pinjam->total_barang,
-            ];
-        });
+        $grouped = [];
 
-        return view('pengembalian', compact('nim', 'barangDipinjam'));
+        foreach ($peminjaman as $pinjam) {
+            $tanggal = $pinjam->tanggal_peminjaman;
+            $jumlahDikembalikan = $pinjam->pengembalians->sum('jumlah');
+            $sisa = $pinjam->total_barang - $jumlahDikembalikan;
+
+            if ($sisa > 0) {
+                if (!isset($grouped[$tanggal])) {
+                    $grouped[$tanggal] = [
+                        'tanggal_pinjam' => $tanggal,
+                        'items' => []
+                    ];
+                }
+
+                $grouped[$tanggal]['items'][] = [
+                    'id' => $pinjam->id,
+                    'nama_barang' => $pinjam->barang->nama_barang ?? 'N/A',
+                    'total_barang' => $sisa
+                ];
+            }
+        }
+
+        $barangDipinjam = array_values($grouped); // numerik array untuk Blade
+
+        return view('pengembalian', compact('barangDipinjam'));
     }
 
-    // method memproses pengembalian barang
     public function store(Request $request)
     {
         $request->validate([
-            'nim' => 'required|string|exists:peminjaman,nim',
             'barang_ids' => 'required|array',
-            'barang_ids.*' => 'exists:peminjaman,id',
+            'jumlah_dikembalikan' => 'required|array',
             'tanggal_pengembalian' => 'required|date',
         ]);
 
+        // ✅ Validasi tambahan: pastikan setidaknya ada satu barang yang dikembalikan
+        $totalPengembalian = 0;
+        foreach ($request->jumlah_dikembalikan as $jumlah) {
+            $totalPengembalian += (int) $jumlah;
+        }
+
+        if ($totalPengembalian <= 0) {
+            return back()->with('error', 'Harap isi setidaknya satu jumlah barang yang ingin dikembalikan.');
+        }
+
         DB::beginTransaction();
         try {
-            foreach ($request->barang_ids as $peminjamanId) {
-                $peminjaman = Peminjaman::findOrFail($peminjamanId);
+            foreach ($request->barang_ids as $index => $peminjamanId) {
+                $jumlahKembali = (int) $request->jumlah_dikembalikan[$index];
 
-                // Create pengembalian record
+                // Skip jika jumlah tidak valid
+                if ($jumlahKembali <= 0) {
+                    continue;
+                }
+
+                $peminjaman = Peminjaman::with(['barang', 'pengembalians'])
+                    ->where('id', $peminjamanId)
+                    ->where('user_id', auth()->id())
+                    ->firstOrFail();
+
+                // ✅ Validasi tanggal pengembalian tidak boleh lebih awal dari tanggal pinjam
+                if (\Carbon\Carbon::parse($request->tanggal_pengembalian)->lt($peminjaman->tanggal_peminjaman)) {
+                    throw new \Exception("Tanggal pengembalian tidak boleh lebih awal dari tanggal peminjaman ({$peminjaman->tanggal_peminjaman}) untuk barang " . ($peminjaman->barang->nama_barang ?? 'N/A') . ".");
+                }
+
+                $sudahDikembalikan = $peminjaman->pengembalians->sum('jumlah');
+                $totalBelumDikembalikanSaatIni = $peminjaman->total_barang - $sudahDikembalikan;
+
+                if ($jumlahKembali > $totalBelumDikembalikanSaatIni) {
+                    throw new \Exception("Jumlah pengembalian ({$jumlahKembali}) melebihi jumlah yang belum dikembalikan ({$totalBelumDikembalikanSaatIni}) untuk barang " . ($peminjaman->barang->nama_barang ?? 'N/A') . ".");
+                }
+
+                // Simpan data pengembalian
                 Pengembalian::create([
-                    'nim' => $request->nim,
-                    'peminjaman_id' => $peminjamanId,
-                    'jenis_barang' => $peminjaman->jenis_barang,
-                    'jumlah' => $peminjaman->total_barang,
+                    'peminjaman_id' => $peminjaman->id,
+                    'barang_id' => $peminjaman->barang_id,
+                    'jumlah' => $jumlahKembali,
                     'tanggal_pengembalian' => $request->tanggal_pengembalian,
                 ]);
 
-                // Update stock
-                $barang = Barang::where('nama_barang', $peminjaman->jenis_barang)->first();
+                // Update stok barang
+                $barang = Barang::find($peminjaman->barang_id);
                 if ($barang) {
-                    $barang->increaseQuantity($peminjaman->total_barang);
+                    $barang->increaseQuantity($jumlahKembali);
                 }
             }
 
             DB::commit();
-            return redirect()->route('pengembalian.cari', ['nim' => $request->nim])
-                ->with('success', 'Barang berhasil dikembalikan!');
+            return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diproses.');
         } catch (\Exception $e) {
-            DB::rollback();
+            DB::rollBack();
+            \Log::error('Pengembalian failed: ' . $e->getMessage(), ['exception' => $e]);
             return back()->with('error', 'Gagal memproses pengembalian: ' . $e->getMessage());
         }
-    }
-
-    public function checkRegisteredRFID($kodeRFID)
-    {
-        $barang = Barang::where('kode_rfid', $kodeRFID)->first();
-
-        if (!$barang) {
-            return response()->json([
-                'exists' => false
-            ]);
-        }
-
-        // Get borrowed items for this NIM
-        $borrowedItems = Peminjaman::where('nim', request('nim'))
-            ->whereDoesntHave('pengembalian')
-            ->where('jenis_barang', $barang->nama_barang)
-            ->get()
-            ->map(function ($pinjam) {
-                return [
-                    'id' => $pinjam->id,
-                    'nama_barang' => $pinjam->jenis_barang,
-                    'jumlah' => $pinjam->total_barang,
-                    'is_borrowed' => true
-                ];
-            });
-
-        return response()->json([
-            'exists' => true,
-            'barang' => $borrowedItems
-        ]);
     }
 }

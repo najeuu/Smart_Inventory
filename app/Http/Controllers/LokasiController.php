@@ -4,24 +4,48 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Lokasi;
+use App\Models\Barang;
 
 class LokasiController extends Controller
 {
     public function generatePDF()
     {
-        // Mengambil semua data lokasi beserta barang terkait
-        $data = Lokasi::with('barang')->get(); // Mengambil data lokasi dan barang yang terkait
+        $data = Lokasi::with('barang')->get();
 
-        // Buat PDF dari view
         $pdf = PDF::loadView('lokasi_pdf', compact('data'));
 
-        // Download file PDF
         return $pdf->download('data_lokasi_dan_barang.pdf');
     }
-    public function show()
+    public function show(Request $request)
     {
-        $data = Lokasi::with('barangs')->get();
-        return view('lokasi', compact('data'));
+        $search = $request->input('search');
+        $filterLokasi = $request->input('filter_lokasi');
+
+        $lokasiList = Lokasi::all();
+
+        $lokasiQuery = Lokasi::with(['barangs' => function ($query) use ($search) {
+            if ($search) {
+                $query->where('nama_barang', 'like', '%' . $search . '%');
+            }
+        }]);
+
+        if ($filterLokasi) {
+            $lokasiQuery->where('id', $filterLokasi);
+        }
+
+        $data = $lokasiQuery->paginate(10)->withQueryString();
+
+        $noBarangFound = $search || $filterLokasi
+            ? $data->every(fn($lokasi) => $lokasi->barangs->isEmpty())
+            : false;
+
+        return view('lokasi', [
+            'data' => $data,
+            'search' => $search,
+            'filterLokasi' => $filterLokasi,
+            'lokasiList' => $lokasiList,
+            'noBarangFound' => $noBarangFound
+        ]);
     }
 
     public function store(Request $request)
@@ -32,7 +56,7 @@ class LokasiController extends Controller
 
         Lokasi::create($request->all());
 
-        return redirect()->route('lokasi');
+        return redirect()->route('lokasi')->with('success', 'Lokasi berhasil ditambahkan.');
     }
 
     public function update(Request $request, $id)
@@ -47,13 +71,14 @@ class LokasiController extends Controller
         }
     }
 
-
-
     public function destroy($id)
     {
-        $lokasi = Lokasi::findOrFail($id);
-        $lokasi->delete();
-
-        return redirect()->route('lokasi');
+        try {
+            $lokasi = Lokasi::findOrFail($id);
+            $lokasi->delete();
+            return redirect()->route('lokasi')->with('success', 'Lokasi berhasil dihapus.');
+        } catch (\Exception $e) {
+            return redirect()->route('lokasi')->with('error', 'Gagal menghapus lokasi.');
+        }
     }
 }

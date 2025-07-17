@@ -9,19 +9,30 @@
     @endpush
 
     <div class="w-full px-8 py-6">
-        <h2 class="text-2xl font-bold mb-6 text-gray-800">Kategori Alat</h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-            @forelse($kategoris as $kategori)
-                <a href="{{ route('pengguna.data_barang.kategori', $kategori->nama_kategori) }}" class="transition-transform transform hover:scale-105">
-                    <div class="bg-white p-4 rounded shadow text-center hover:bg-blue-100">
-                        <img src="{{ asset('image/' . $kategori->nama_kategori . '.png') }}" class="h-32 mx-auto object-contain" alt="{{ $kategori->nama_kategori }}">
-                        <p class="mt-2 font-semibold text-gray-700">{{ $kategori->nama_kategori }}</p>
-                    </div>
-                </a>
-            @empty
-                <p class="text-gray-500 col-span-full">Tidak ada kategori yang tersedia.</p>
-            @endforelse
-        </div>
+        {{-- Judul kategori --}}
+        <h1 class="text-2xl font-bold mb-4">
+            @isset($kategori)
+                Kategori: {{ $kategori->nama_kategori }}
+            @else
+                Silakan pilih kategori untuk melihat daftar barang
+            @endisset
+        </h1>
+
+        {{-- Daftar Barang --}}
+        @if(isset($barangs) && $barangs->count() > 0)
+            @foreach ($barangs as $barang)
+                <div class="bg-white p-4 rounded-xl shadow mb-4">
+                    <h2 class="text-lg font-bold">{{ $barang->nama_barang }}</h2>
+                    <p><strong>Stok:</strong> {{ $barang->jumlah }} pcs</p>
+                    <p><strong>Deskripsi:</strong><br> {!! nl2br(e($barang->deskripsi)) !!}</p>
+                </div>
+            @endforeach
+        @elseif(isset($kategori))
+            <p class="text-gray-600 italic">Belum ada barang dalam kategori ini.</p>
+        @else
+            <p class="text-gray-600 italic">Silakan pilih kategori terlebih dahulu dari halaman dashboard.</p>
+        @endif
+
     </div>
 @endsection

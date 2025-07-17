@@ -7,10 +7,46 @@ use App\Models\KategoriBarang;
 
 class KategoriBarangController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = KategoriBarang::with('barangs')->get();
-        return view('kategori', compact('data'));
+        $search = $request->input('search');
+        $filterKategori = $request->input('filter_kategori');
+
+        $query = KategoriBarang::query();
+        if ($filterKategori) {
+            $query->where('id', $filterKategori);
+        }
+
+        $kategoriList = KategoriBarang::all();
+
+        $kategoriData = $query->with(['barangs' => function ($q) use ($search) {
+            if ($search) {
+                $q->where('nama_barang', 'like', '%' . $search . '%');
+            }
+        }])->get();
+
+        // TIDAK MEMFILTER lagi kategori yang tidak punya barang
+        $currentPage = request()->get('page', 1);
+        $perPage = 10;
+        $paginated = new \Illuminate\Pagination\LengthAwarePaginator(
+            $kategoriData->forPage($currentPage, $perPage),
+            $kategoriData->count(),
+            $perPage,
+            $currentPage,
+            ['path' => request()->url(), 'query' => request()->query()]
+        );
+
+        $noBarangFound = ($search || $filterKategori) && $kategoriData->every(function ($kategori) {
+            return $kategori->barangs->isEmpty();
+        });
+
+        return view('kategori', [
+            'data' => $paginated,
+            'kategoriList' => $kategoriList,
+            'search' => $search,
+            'filterKategori' => $filterKategori,
+            'noBarangFound' => $noBarangFound,
+        ]);
     }
 
     public function store(Request $request)

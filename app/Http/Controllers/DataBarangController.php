@@ -53,16 +53,18 @@ class DataBarangController extends Controller
     public function showUser()
     {
         $kategoris = KategoriBarang::all();
-        return view('databarang-pengguna', compact('kategoris'));
+        $kategori = null;
+        $barangs = null;
+        return view('databarang-pengguna', compact('kategoris', 'kategori', 'barangs'));
     }
 
     // Menampilkan barang per kategori untuk pengguna
-    public function showByKategori($kategori)
+    public function showByKategori($id)
     {
-        $barangs = Barang::with('kategori')->whereHas('kategori', function ($q) use ($kategori) {
-            $q->where('nama_kategori', $kategori);
-        })->get();
-        return view('pengguna.databarang_per_kategori', compact('barangs', 'kategori'));
+        $kategori = KategoriBarang::findOrFail($id);
+        $barangs = Barang::where('kategori_id', $id)->get();
+
+        return view('databarang-pengguna', compact('kategori', 'barangs'));
     }
 
     public function show()
@@ -137,18 +139,14 @@ class DataBarangController extends Controller
         $barang->kode_rfid = $request->kode_rfid;
         $barang->deskripsi = $request->deskripsi;
 
-        // Jika ada gambar baru di-upload
         if ($request->hasFile('gambar')) {
-            // Hapus gambar lama jika ada
             if ($barang->gambar && Storage::disk('public')->exists($barang->gambar)) {
                 Storage::disk('public')->delete($barang->gambar);
             }
 
-            // Simpan gambar baru
             $barang->gambar = $request->file('gambar')->store('gambar_barang', 'public');
         }
 
-        // Simpan perubahan
         $barang->save();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil diperbarui.');
@@ -158,10 +156,8 @@ class DataBarangController extends Controller
     {
         $barang = Barang::findOrFail($id);
 
-        // Cari semua peminjaman yang berkaitan dengan barang ini
-        $peminjamans = Peminjaman::where('jenis_barang', $barang->nama_barang)->get();
+        $peminjamans = Peminjaman::where('barang_id', $barang->nama_barang)->get();
 
-        // Cek apakah masih ada peminjaman yang belum dikembalikan
         foreach ($peminjamans as $pinjam) {
             if ($pinjam->pengembalian === null) {
                 return redirect()->route('data_barang')
@@ -169,20 +165,18 @@ class DataBarangController extends Controller
             }
         }
 
-        // Jika semua sudah dikembalikan, hapus pengembalian dulu
         foreach ($peminjamans as $pinjam) {
             if ($pinjam->pengembalian) {
-                $pinjam->pengembalian->delete(); // hapus dari tabel pengembalian
+                $pinjam->pengembalian->delete();
             }
-            $pinjam->delete(); // hapus peminjaman
+            $pinjam->delete();
         }
 
-        // Hapus gambar jika ada
         if ($barang->gambar && \Storage::disk('public')->exists($barang->gambar)) {
             \Storage::disk('public')->delete($barang->gambar);
         }
 
-        $barang->delete(); // terakhir hapus barang
+        $barang->delete();
 
         return redirect()->route('data_barang')->with('success', 'Data barang berhasil dihapus.');
     }

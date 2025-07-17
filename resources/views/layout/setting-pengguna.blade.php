@@ -11,7 +11,7 @@
     @include('partials.sidebar_pengguna')
 
     <!-- Konten Utama -->
-    <main class="flex-1 p-8 overflow-y-auto scrollbar-hide">
+    <main class="flex-1 p-8">
         @yield('content')
     </main>
 </body>
