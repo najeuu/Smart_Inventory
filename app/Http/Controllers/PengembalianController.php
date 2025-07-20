@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use App\Models\Peminjaman;
 use App\Models\Pengembalian;
 use App\Models\Barang;
-use Illuminate\Http\Request;
 
 class PengembalianController extends Controller
 {
@@ -109,7 +110,7 @@ class PengembalianController extends Controller
             return redirect()->route('pengembalian.index')->with('success', 'Pengembalian berhasil diproses.');
         } catch (\Exception $e) {
             DB::rollBack();
-            \Log::error('Pengembalian failed: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Pengembalian failed: ' . $e->getMessage(), ['exception' => $e]);
             return back()->with('error', 'Gagal memproses pengembalian: ' . $e->getMessage());
         }
     }

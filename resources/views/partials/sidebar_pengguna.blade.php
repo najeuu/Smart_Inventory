@@ -4,7 +4,7 @@
 
 <!--sidebar-->
 <div class="flex bg-gray-100 font-poppins h-screen">
-    <div class="bg-blue-300 w-64 hidden md:flex md:flex-col rounded-tr-3xl rounded-br-3xl custom-shadow z-30">
+    <div class="bg-blue-300 w-64 flex flex-col rounded-tr-3xl rounded-br-3xl custom-shadow z-30">
         <div class="flex items-center mb-8 space-x-2 mt-4 justify-center">
             <img src="{{ url('/image/logo.png') }}" alt="Logo" class="h-14 w-14 mr-2">
             <div class="text-left">

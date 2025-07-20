@@ -1,25 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('partials.head')
     <style>
-        #data_barang {
-            background: white
+        ::-webkit-scrollbar {
+            width: 0px;
+            background: transparent;
+        }
+
+        body, main {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
 
 <body class="bg-gray-100 font-poppins overflow-x-hidden">
-    <div class="flex h-screen">
+    <div class="flex">
         <!-- Sidebar -->
-        @include('partials.sidebar')
+        <div class="w-64 fixed h-screen bg-white shadow-lg z-40">
+            @include('partials.sidebar')
+        </div>
 
-        <!-- Main Content -->
-        <div class="flex-1 flex flex-col">
+        <!-- Konten Utama -->
+        <div class="flex-1 flex flex-col ml-64 min-h-screen">
             <!-- Header -->
-            @include('partials.header')
+            <div class="fixed top-0 left-64 right-0 h-16">
+                @include('partials.header')
+            </div>
 
-            <!-- Konten -->
-            <main class="flex-1 p-8 overflow-y-auto">
+            <!-- Isi Konten -->
+            <main class="flex-1 pt-20 p-8 overflow-y-auto scrollbar-hide" style="height: calc(100vh - 64px);">
                 <div class="max-w-7xl mx-auto">
                     @yield('content')
                 </div>
@@ -27,7 +39,6 @@
         </div>
     </div>
 
-    <script src="{{ asset('js/rfid-scanner-laravel.js') }}"></script>
     @stack('scripts')
 </body>
 </html>

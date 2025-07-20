@@ -12,12 +12,12 @@
 
         <nav class="space-y-2 font-bold px-4">
             <a href="{{ route('dasboard') }}"
-               class="flex items-center py-2 rounded-lg px-3 hover:bg-blue-400 {{ request()->routeIs('dasboard') ? $activeClass : '' }}">
+            class="flex items-center py-2 rounded-lg px-3 hover:bg-blue-400 {{ request()->routeIs('dasboard') ? $activeClass : '' }}">
                 <span class="material-icons mr-3">dashboard</span> Dashboard
             </a>
 
             <a href="{{ route('data_barang') }}"
-               class="flex items-center py-2 rounded-lg px-3 hover:bg-blue-400 {{ request()->routeIs('data_barang') ? $activeClass : '' }}">
+           class="flex items-center py-2 rounded-lg px-3 hover:bg-blue-400 {{ request()->routeIs('data_barang') ? $activeClass : '' }}">
                 <span class="material-icons mr-3">inventory</span> Data Barang
             </a>
 
