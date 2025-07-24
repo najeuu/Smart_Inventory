@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Barang;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class PeminjamanController extends Controller
 {
@@ -91,7 +92,7 @@ class PeminjamanController extends Controller
 
             return redirect()->route('peminjaman')->with('success', 'Peminjaman berhasil diajukan.');
         } catch (\Exception $e) {
-            \Log::error('Peminjaman failed: ' . $e->getMessage(), ['exception' => $e]);
+            Log::error('Peminjaman failed: ' . $e->getMessage(), ['exception' => $e]);
             return redirect()->route('peminjaman')->with('error', 'Terjadi kesalahan saat peminjaman: ' . $e->getMessage());
         }
     }

@@ -5,7 +5,7 @@
 @section('content')
 <div class="bg-gray-100 font-poppins leading-normal tracking-normal">
     <div class="w-full p-8">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">RIWAYAT PEMINJAMAN BARANG</h1>
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">RIWAYAT BARANG</h1>
 
         <div class="overflow-hidden rounded-lg border border-gray-300 shadow-sm mb-8">
             <table class="min-w-full bg-white border border-gray-300">
